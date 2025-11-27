@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.presentation.component.theme.SiriaTemplateTheme
+import com.example.presentation.component.theme.PetbulanceTheme
 import com.example.presentation.component.ui.atom.BasicIcon
 import com.example.presentation.component.ui.atom.IconResource
 
@@ -31,7 +31,7 @@ import com.example.presentation.component.ui.atom.IconResource
 fun AppTopBar(
     modifier: Modifier = Modifier,
     topBarInfo: TopBarInfo,
-    background: Color = SiriaTemplateTheme.colorScheme.background,
+    background: Color = PetbulanceTheme.colorScheme.background,
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -51,7 +51,7 @@ fun AppTopBar(
         Box(modifier = Modifier.weight(6f)) {
             Text(
                 text = topBarInfo.text,
-                color = SiriaTemplateTheme.colorScheme.commonText,
+                color = PetbulanceTheme.colorScheme.commonText,
                 style = MaterialTheme.typography.headlineMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -89,7 +89,7 @@ private fun TopBarLeadingIcon(
     if (isLeadingIconAvailable) {
         BasicIcon(
             iconResource = iconResource,
-            tint = SiriaTemplateTheme.colorScheme.iconTint,
+            tint = PetbulanceTheme.colorScheme.iconTint,
             contentDescription = "Leading Icon",
             modifier = modifier
                 .clickable { onLeadingIconClicked() }
@@ -111,7 +111,7 @@ private fun TopBarTrailingIcon(
     if (isTrailingIconAvailable) {
         BasicIcon(
             iconResource = iconResource,
-            tint = SiriaTemplateTheme.colorScheme.iconTint,
+            tint = PetbulanceTheme.colorScheme.iconTint,
             contentDescription = "Trailing Icon",
             modifier = modifier
                 .clickable { onTrailingIconClicked() }
@@ -126,7 +126,7 @@ private fun TopBarTrailingIcon(
 @Preview(apiLevel = 34)
 @Composable
 private fun AppTopBarPreview() {
-    SiriaTemplateTheme {
+    PetbulanceTheme {
         val textList = listOf(
             "Short example",
             "LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG Example",

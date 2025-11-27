@@ -23,7 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.presentation.component.theme.SiriaTemplateTheme
+import com.example.presentation.component.theme.PetbulanceTheme
+import com.example.presentation.component.ui.atom.IconResource
 import com.example.presentation.component.ui.organism.AppTopBar
 import com.example.presentation.component.ui.organism.BottomNavigationBar
 import com.example.presentation.component.ui.organism.CurrentBottomNav
@@ -59,10 +60,10 @@ fun HomeScreen(
                     text = "Home",
                     isLeadingIconAvailable = false,
                     onLeadingIconClicked = {},
-                    leadingIconResource = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    leadingIconResource = IconResource.Vector(Icons.AutoMirrored.Filled.KeyboardArrowLeft),
                     isTrailingIconAvailable = false,
                     onTrailingIconClicked = {},
-                    trailingIconResource = Icons.Filled.MoreVert
+                    trailingIconResource = IconResource.Vector(Icons.Filled.MoreVert)
                 ),
             )
         },
@@ -112,7 +113,7 @@ private fun HomeScreenContents(
 @Preview
 @Composable
 private fun HomeScreenPreview() {
-    SiriaTemplateTheme {
+    PetbulanceTheme {
         HomeScreen(
             navController = rememberNavController(),
             argument = HomeArgument(

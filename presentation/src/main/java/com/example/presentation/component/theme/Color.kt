@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-private val LightColorPalette = SiriaTemplateColorScheme(
+private val LightColorPalette = PetbulanceColorScheme(
     primary = Color(0xFF222051),
     lightPrimary = Color(0xFF8B87EA),
     secondary = Color(0xFF637387),
@@ -39,7 +39,7 @@ private val LightColorPalette = SiriaTemplateColorScheme(
     isDark = false
 )
 
-private val DarkColorPalette = SiriaTemplateColorScheme(
+private val DarkColorPalette = PetbulanceColorScheme(
     primary = Color(0xFF5A57C9),
     lightPrimary = Color(0xFF8B87EA),
     secondary = Color(0xFFB0BEC5),
@@ -59,7 +59,7 @@ private val DarkColorPalette = SiriaTemplateColorScheme(
     isDark = true
 )
 
-class SiriaTemplateColorScheme(
+class PetbulanceColorScheme(
     var primary: Color,
     var lightPrimary: Color,
     var secondary: Color,
@@ -79,10 +79,10 @@ class SiriaTemplateColorScheme(
     val isDark: Boolean
 )
 
-val LocalTaskOverflowColorScheme = staticCompositionLocalOf { LightColorPalette }
+val LocalPetbulanceColorScheme = staticCompositionLocalOf { LightColorPalette }
 
 @Composable
-fun getTaskOverflowColorScheme(darkTheme: Boolean): SiriaTemplateColorScheme {
+fun getPetbulanceColorScheme(darkTheme: Boolean = false): PetbulanceColorScheme {
     return if (darkTheme) DarkColorPalette else LightColorPalette
 }
 
@@ -95,27 +95,27 @@ fun getTaskOverflowColorScheme(darkTheme: Boolean): SiriaTemplateColorScheme {
 )
 @Composable
 private fun ColorPalettePreview() {
-    SiriaTemplateTheme {
+    PetbulanceTheme {
         val colors = listOf(
-            "primary" to SiriaTemplateTheme.colorScheme.primary,
-            "lightPrimary" to SiriaTemplateTheme.colorScheme.lightPrimary,
-            "secondary" to SiriaTemplateTheme.colorScheme.secondary,
-            "commonText" to SiriaTemplateTheme.colorScheme.commonText,
-            "descriptionText" to SiriaTemplateTheme.colorScheme.descriptionText,
-            "iconTint" to SiriaTemplateTheme.colorScheme.iconTint,
-            "inactivatedColor" to SiriaTemplateTheme.colorScheme.inactivatedIconColor,
-            "inactivatedTextColor" to SiriaTemplateTheme.colorScheme.inactivatedTextColor,
-            "bottomNavIconTint" to SiriaTemplateTheme.colorScheme.bottomNavIconTint,
-            "surface" to SiriaTemplateTheme.colorScheme.surface,
-            "background" to SiriaTemplateTheme.colorScheme.background,
-            "primaryButtonColor" to SiriaTemplateTheme.colorScheme.primaryButtonColor,
-            "onPrimaryButtonColor" to SiriaTemplateTheme.colorScheme.onPrimaryButtonColor,
-            "secondaryButtonColor" to SiriaTemplateTheme.colorScheme.secondaryButtonColor,
-            "onSecondaryButtonColor" to SiriaTemplateTheme.colorScheme.onSecondaryButtonColor,
+            "primary" to PetbulanceTheme.colorScheme.primary,
+            "lightPrimary" to PetbulanceTheme.colorScheme.lightPrimary,
+            "secondary" to PetbulanceTheme.colorScheme.secondary,
+            "commonText" to PetbulanceTheme.colorScheme.commonText,
+            "descriptionText" to PetbulanceTheme.colorScheme.descriptionText,
+            "iconTint" to PetbulanceTheme.colorScheme.iconTint,
+            "inactivatedColor" to PetbulanceTheme.colorScheme.inactivatedIconColor,
+            "inactivatedTextColor" to PetbulanceTheme.colorScheme.inactivatedTextColor,
+            "bottomNavIconTint" to PetbulanceTheme.colorScheme.bottomNavIconTint,
+            "surface" to PetbulanceTheme.colorScheme.surface,
+            "background" to PetbulanceTheme.colorScheme.background,
+            "primaryButtonColor" to PetbulanceTheme.colorScheme.primaryButtonColor,
+            "onPrimaryButtonColor" to PetbulanceTheme.colorScheme.onPrimaryButtonColor,
+            "secondaryButtonColor" to PetbulanceTheme.colorScheme.secondaryButtonColor,
+            "onSecondaryButtonColor" to PetbulanceTheme.colorScheme.onSecondaryButtonColor,
         )
 
         val backgroundColor =
-            if (SiriaTemplateTheme.colorScheme.isDark) Color.Black else Color.White
+            if (PetbulanceTheme.colorScheme.isDark) Color.Black else Color.White
         LazyColumn(
             modifier = Modifier
                 .background(backgroundColor)
@@ -137,7 +137,7 @@ private fun ColorPalettePreview() {
                     Text(
                         text = name,
                         style = MaterialTheme.typography.bodyLarge,
-                        color = SiriaTemplateTheme.colorScheme.commonText,
+                        color = PetbulanceTheme.colorScheme.commonText,
                         modifier = Modifier.padding(start = 16.dp)
                     )
                 }

@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.presentation.R
-import com.example.presentation.component.theme.SiriaTemplateTheme
+import com.example.presentation.component.theme.PetbulanceTheme
 import com.example.presentation.component.ui.atom.BasicIcon
 import com.example.presentation.component.ui.atom.IconResource
 import com.example.presentation.utils.nav.safePopBackStack
@@ -98,8 +98,8 @@ private fun BottomNavItem(
     modifier: Modifier,
     onClicked: () -> Unit
 ) {
-    val selectedColor = SiriaTemplateTheme.colorScheme.iconTint
-    val unselectedColor = SiriaTemplateTheme.colorScheme.inactivatedIconColor
+    val selectedColor = PetbulanceTheme.colorScheme.iconTint
+    val unselectedColor = PetbulanceTheme.colorScheme.inactivatedIconColor
 
     val iconColor = if (isSelected) selectedColor else unselectedColor
 
@@ -112,7 +112,7 @@ private fun BottomNavItem(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .background(SiriaTemplateTheme.colorScheme.surface),
+                .background(PetbulanceTheme.colorScheme.surface),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -145,7 +145,7 @@ enum class CurrentBottomNav {
 @Preview
 @Composable
 private fun BottomNavigationBarPreview1() {
-    SiriaTemplateTheme {
+    PetbulanceTheme {
         BottomNavigationBar(
             selectedItem = CurrentBottomNav.HOME,
             navController = rememberNavController()

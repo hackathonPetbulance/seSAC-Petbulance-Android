@@ -15,14 +15,14 @@ import com.example.domain.model.type.AppTheme
 private val DarkColorScheme = darkColorScheme()
 private val LightColorScheme = lightColorScheme()
 
-object SiriaTemplateTheme {
-    val colorScheme: SiriaTemplateColorScheme
+object PetbulanceTheme {
+    val colorScheme: PetbulanceColorScheme
         @Composable
-        get() = LocalTaskOverflowColorScheme.current
+        get() = LocalPetbulanceColorScheme.current
 }
 
 @Composable
-fun SiriaTemplateTheme(
+fun PetbulanceTheme(
     appTheme: AppTheme = AppTheme.DEVICE,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
@@ -33,7 +33,7 @@ fun SiriaTemplateTheme(
         AppTheme.DEVICE -> isSystemInDarkTheme()
     }
 
-    val customColorScheme = getTaskOverflowColorScheme(useDarkTheme)
+    val customColorScheme = getPetbulanceColorScheme(useDarkTheme)
 
     val materialColorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
@@ -45,10 +45,10 @@ fun SiriaTemplateTheme(
         else -> LightColorScheme
     }
 
-    CompositionLocalProvider(LocalTaskOverflowColorScheme provides customColorScheme) {
+    CompositionLocalProvider(LocalPetbulanceColorScheme provides customColorScheme) {
         MaterialTheme(
             colorScheme = materialColorScheme,
-            typography = Typography,
+            typography = PretendardTypography,
             content = content
         )
     }

@@ -3,6 +3,9 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="17">
       <module name="AutoAdventure.autoadventure.data" target="21" />
+      <module name="siriaTemplate.app" target="21" />
+      <module name="siriaTemplate.data" target="21" />
+      <module name="siriaTemplate.presentation" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

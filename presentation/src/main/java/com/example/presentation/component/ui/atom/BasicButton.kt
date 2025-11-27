@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.presentation.component.theme.SiriaTemplateTheme
+import com.example.presentation.component.theme.PetbulanceTheme
 
 @Composable
 fun BasicButton(
@@ -23,15 +23,15 @@ fun BasicButton(
     modifier: Modifier = Modifier
 ) {
     val buttonColor = when (type) {
-        ButtonType.PRIMARY -> SiriaTemplateTheme.colorScheme.primaryButtonColor
-        ButtonType.SECONDARY -> SiriaTemplateTheme.colorScheme.secondaryButtonColor
-        ButtonType.DEFAULT -> SiriaTemplateTheme.colorScheme.surface
+        ButtonType.PRIMARY -> PetbulanceTheme.colorScheme.primaryButtonColor
+        ButtonType.SECONDARY -> PetbulanceTheme.colorScheme.secondaryButtonColor
+        ButtonType.DEFAULT -> PetbulanceTheme.colorScheme.surface
     }
 
     val textColor = when (type) {
-        ButtonType.PRIMARY -> SiriaTemplateTheme.colorScheme.onPrimaryButtonColor
-        ButtonType.SECONDARY -> SiriaTemplateTheme.colorScheme.onSecondaryButtonColor
-        ButtonType.DEFAULT -> SiriaTemplateTheme.colorScheme.commonText
+        ButtonType.PRIMARY -> PetbulanceTheme.colorScheme.onPrimaryButtonColor
+        ButtonType.SECONDARY -> PetbulanceTheme.colorScheme.onSecondaryButtonColor
+        ButtonType.DEFAULT -> PetbulanceTheme.colorScheme.commonText
     }
 
     Box(
@@ -57,7 +57,7 @@ enum class ButtonType {
 @Preview
 @Composable
 private fun AppButtonPreview() {
-    SiriaTemplateTheme {
+    PetbulanceTheme {
         BasicButton(
             text = "Button",
             onClicked = {},
