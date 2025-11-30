@@ -1,12 +1,12 @@
 package com.example.presentation.screen.diagnosis.report
 
 import com.example.domain.model.feature.diagnosis.AiDiagnosis
-import com.example.domain.model.feature.hospitals.HospitalCard
+import com.example.domain.model.feature.hospitals.MatchedHospital
 
 data class ReportData(
     val aiDiagnosis: AiDiagnosis,
     val userLocation: String,
-    val matchedHospitals: List<HospitalCard>
+    val matchedHospitals: List<MatchedHospital>
 
     ) {
     companion object {

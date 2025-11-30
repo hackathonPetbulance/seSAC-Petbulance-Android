@@ -46,6 +46,7 @@ fun BasicButton(
 
     val borderColor = when (type) {
         ButtonType.SECONDARY -> PetbulanceTheme.colorScheme.primary
+        ButtonType.DEFAULT -> Color.LightGray
         else -> Color.Unspecified
     }
 
@@ -90,7 +91,7 @@ fun BasicButtonWithIcon(
 
     val borderColor = when (type) {
         ButtonType.SECONDARY -> PetbulanceTheme.colorScheme.primary
-        ButtonType.DEFAULT -> Color(0xFFEDEDED)
+        ButtonType.DEFAULT -> Color.LightGray
         else -> Color.Unspecified
     }
 

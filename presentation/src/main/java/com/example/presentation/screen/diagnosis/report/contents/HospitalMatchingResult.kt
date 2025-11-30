@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.domain.model.feature.hospitals.HospitalCard
+import com.example.domain.model.feature.hospitals.MatchedHospital
 import com.example.domain.model.type.EmergencyLevel
 import com.example.domain.model.type.HospitalFilterType
 import com.example.domain.model.type.toKorean
@@ -42,7 +42,7 @@ import com.example.presentation.component.ui.molecule.HospitalCard
 
 @Composable
 fun HospitalMatchingResult(
-    hospitals: List<HospitalCard>,
+    hospitals: List<MatchedHospital>,
     userLocation: String,
     emergencyLevel: EmergencyLevel,
     animalType: String,
@@ -171,7 +171,7 @@ private fun FilterChip(
 private fun HospitalMatchingResultPreview() {
     PetbulanceTheme {
         HospitalMatchingResult(
-            hospitals = listOf(HospitalCard.stub(), HospitalCard.stub()),
+            hospitals = listOf(MatchedHospital.stub(), MatchedHospital.stub()),
             userLocation = "서울 마포구",
             emergencyLevel = EmergencyLevel.MIDDLE,
             animalType = "앵무새",

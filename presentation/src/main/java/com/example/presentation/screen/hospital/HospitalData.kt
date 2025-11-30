@@ -1,11 +1,11 @@
 package com.example.presentation.screen.hospital
 
+import com.example.domain.model.feature.hospitals.HospitalDetail
+
 data class HospitalData(
-    val data: String
+    val hospital: HospitalDetail
 ) {
     companion object {
-        fun empty() = HospitalData(
-            data = ""
-        )
+        fun empty() = HospitalDetail.stub
     }
 }

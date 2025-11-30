@@ -53,7 +53,8 @@ private val LightColorPalette = PetbulanceColorScheme(
     textSecondary = Color(0xFF212121),
 
     caption = Color(0xFF9E9E9E),
-    caption2 = Color(0xFF65758B)
+    caption2 = Color(0xFF65758B),
+    disabled = Color(0XFFBDBDBD)
 )
 
 private val DarkColorPalette = LightColorPalette.copy(isDark = true)
@@ -86,6 +87,7 @@ data class PetbulanceColorScheme(
 
     var caption: Color,
     var caption2: Color,
+    var disabled: Color,
 
     var defaultIcon: Color,
     var bgFrameDefault: Color,

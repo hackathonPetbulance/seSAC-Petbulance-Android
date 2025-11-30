@@ -1,6 +1,7 @@
 package com.example.domain.model.feature.hospitals
 
-data class HospitalCard(
+/* from AI 병원 매칭 */
+data class MatchedHospital(
     val hospitalId: Long,
     val thumbnailUrl: String,
     val name: String,
@@ -11,7 +12,7 @@ data class HospitalCard(
     val phone: String,
 ) {
     companion object {
-        fun stub() = HospitalCard(
+        fun stub() = MatchedHospital(
             hospitalId = 12L,
             name = "서울 특수동물 의료센터",
             isOpenNow = true,

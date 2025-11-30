@@ -47,7 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.domain.model.feature.hospitals.HospitalCard
+import com.example.domain.model.feature.hospitals.MatchedHospital
 import com.example.domain.model.feature.reviews.HospitalReview
 import com.example.domain.model.type.AnimalCategory
 import com.example.domain.model.type.toKorean
@@ -90,7 +90,7 @@ fun HomeScreen(
         currentSelectedAnimalCategory = animalCategory
     }
 
-    val hospitalCards = data.hospitalCards
+    val hospitalCards = data.matchedHospitals
     val hospitalReviews = data.hospitalReviews
 
     if (!hasLocationPermission) {
@@ -135,7 +135,7 @@ fun HomeScreen(
         Box(modifier = Modifier.padding(innerPadding)) {
             HomeScreenContents(
                 hasLocationPermission = hasLocationPermission,
-                hospitalCards = hospitalCards,
+                matchedHospitals = hospitalCards,
                 hospitalReviews = hospitalReviews,
                 currentSelectedAnimalCategory = currentSelectedAnimalCategory,
                 onReviewCategoryChipClicked = onReviewCategoryChipClicked,
@@ -162,7 +162,7 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenContents(
     hasLocationPermission: Boolean,
-    hospitalCards: List<HospitalCard>,
+    matchedHospitals: List<MatchedHospital>,
     hospitalReviews: List<HospitalReview>,
     currentSelectedAnimalCategory: AnimalCategory,
     onNavigateToDiagnosisScreen: () -> Unit,
@@ -177,7 +177,7 @@ private fun HomeScreenContents(
     ) {
         StartAiReportCard(onNavigateToDiagnosisScreen)
 
-        NearByHospitalCards(hasLocationPermission, hospitalCards)
+        NearByHospitalCards(hasLocationPermission, matchedHospitals)
 
         HospitalReviews(
             hospitalReviews = hospitalReviews,
@@ -273,7 +273,7 @@ private fun StartAiReportCard(
 @Composable
 private fun NearByHospitalCards(
     hasLocationPermission: Boolean,
-    hospitalCards: List<HospitalCard>
+    matchedHospitals: List<MatchedHospital>
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -286,7 +286,7 @@ private fun NearByHospitalCards(
             modifier = Modifier.padding(vertical = 4.dp)
         )
         if (hasLocationPermission) {
-            hospitalCards.forEach { hospital ->
+            matchedHospitals.forEach { hospital ->
                 HospitalCard(hospital)
             }
         } else {

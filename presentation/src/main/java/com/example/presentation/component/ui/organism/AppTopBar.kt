@@ -55,6 +55,8 @@ fun AppTopBar(
                 contentDescription = "Leading icon",
                 onIconClicked = topBarInfo.onLeadingIconClicked
             )
+        } else {
+            Spacer(modifier = Modifier.padding(24.dp))
         }
 
         Row(
@@ -68,7 +70,9 @@ fun AppTopBar(
                 else TextAlign.Start,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp)
+                modifier = Modifier
+                    .padding(vertical = 8.dp, horizontal = 12.dp)
+                    .fillMaxWidth()
             )
         }
         Row(

@@ -5,7 +5,7 @@ import android.app.Application
 import android.net.Uri
 import android.util.Log
 import com.example.domain.model.feature.diagnosis.AiDiagnosis
-import com.example.domain.model.feature.hospitals.HospitalCard
+import com.example.domain.model.feature.hospitals.MatchedHospital
 import com.example.domain.usecase.feature.diagnosis.RequestDiagnosisUseCase
 import com.example.domain.usecase.feature.hospital.GetHospitalWithFilterUseCase
 import com.example.domain.usecase.feature.hospital.HospitalFilterType
@@ -51,8 +51,8 @@ class DiagnosisViewModel @Inject constructor(
     private val _userLocation = MutableStateFlow("")
     val userLocation: StateFlow<String> = _userLocation
 
-    private val _matchedHospitals = MutableStateFlow<List<HospitalCard>>(emptyList())
-    val matchedHospitals: StateFlow<List<HospitalCard>> = _matchedHospitals
+    private val _matchedHospitals = MutableStateFlow<List<MatchedHospital>>(emptyList())
+    val matchedHospitals: StateFlow<List<MatchedHospital>> = _matchedHospitals
 
 
     fun onIntent(intent: DiagnosisIntent) {

@@ -147,7 +147,7 @@ fun DiagnosisScreen(
                             onUpload = { _, _ -> }
                         )
                     )
-                    /* TODO : Navigate to next page */
+                    /* TODO : Navigate to next page : 로딩 */
                 },
                 onDeletionIconClicked = { idx ->
                     currentSelectedStep = idx

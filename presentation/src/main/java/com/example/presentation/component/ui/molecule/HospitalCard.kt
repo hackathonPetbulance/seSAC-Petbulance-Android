@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import com.example.domain.model.feature.hospitals.HospitalCard
+import com.example.domain.model.feature.hospitals.MatchedHospital
 import com.example.presentation.component.theme.PetbulanceTheme
 import com.example.presentation.component.theme.PetbulanceTheme.colorScheme
 import com.example.presentation.component.theme.emp
@@ -27,7 +27,7 @@ import com.example.presentation.component.ui.atom.ButtonType
 import com.example.presentation.component.ui.dropShadow
 
 @Composable
-fun HospitalCard(hospital: HospitalCard) {
+fun HospitalCard(hospital: MatchedHospital) {
     BasicCard(
         modifier = Modifier.dropShadow(
             shape = RoundedCornerShape(16.dp),
@@ -68,7 +68,7 @@ fun HospitalCard(hospital: HospitalCard) {
 }
 
 @Composable
-private fun HospitalInfos(hospital: HospitalCard) {
+private fun HospitalInfos(hospital: MatchedHospital) {
     val commonRowSpacing = 8.dp
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -121,6 +121,6 @@ private fun HospitalInfos(hospital: HospitalCard) {
 @Composable
 private fun HospitalCardPreview() {
     PetbulanceTheme {
-        HospitalCard(HospitalCard.stub())
+        HospitalCard(MatchedHospital.stub())
     }
 }

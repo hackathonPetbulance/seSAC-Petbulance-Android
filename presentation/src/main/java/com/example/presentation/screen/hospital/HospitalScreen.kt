@@ -3,14 +3,14 @@ package com.example.presentation.screen.hospital
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,14 +20,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.domain.model.feature.hospitals.HospitalDetail
 import com.example.presentation.component.theme.PetbulanceTheme
+import com.example.presentation.component.ui.CommonPadding
 import com.example.presentation.component.ui.atom.IconResource
+import com.example.presentation.component.ui.molecule.HospitalInfoCard
 import com.example.presentation.component.ui.organism.AppTopBar
-import com.example.presentation.component.ui.organism.BottomNavigationBar
-import com.example.presentation.component.ui.organism.CurrentBottomNav
 import com.example.presentation.component.ui.organism.TopBarAlignment
 import com.example.presentation.component.ui.organism.TopBarInfo
 import com.example.presentation.utils.error.ErrorDialog
@@ -46,6 +46,8 @@ fun HospitalScreen(
     var errorDialogState by remember { mutableStateOf(ErrorDialogState.idle()) }
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
+    val hospital = data.hospital
+
     LaunchedEffect(argument.event) {
         argument.event.collect { event ->
             when (event) {
@@ -58,24 +60,25 @@ fun HospitalScreen(
         topBar = {
             AppTopBar(
                 topBarInfo = TopBarInfo(
-                    text = "Hospital screen",
-                    textAlignment = TopBarAlignment.START,
-                    isLeadingIconAvailable = false,
+                    text = "병원 상세 정보",
+                    textAlignment = TopBarAlignment.CENTER,
+                    isLeadingIconAvailable = true,
                     onLeadingIconClicked = {},
                     leadingIconResource = IconResource.Vector(Icons.AutoMirrored.Filled.KeyboardArrowLeft),
+                    trailingIcons = listOf(
+                        Pair(
+                            IconResource.Vector(Icons.Filled.Share),
+                            { /* TODO : Share icon */ }
+                        )
+                    )
                 ),
             )
         },
-        bottomBar = {
-            BottomNavigationBar(
-                selectedItem = CurrentBottomNav.HOME,
-                navController = navController
-            )
-        },
+        containerColor = PetbulanceTheme.colorScheme.bgFrameDefault,
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             HospitalScreenContents(
-
+                hospital
             )
         }
     }
@@ -95,19 +98,31 @@ fun HospitalScreen(
 
 @Composable
 private fun HospitalScreenContents(
-
+    hospital: HospitalDetail
 ) {
+    var selectedTab by remember { mutableStateOf(TabType.DETAILS) }
+
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(CommonPadding)
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        Text("text")
+        HospitalInfoCard(hospital = hospital, modifier = Modifier.fillMaxWidth())
 
+        HospitalDetailsTab(selectedTab)
     }
 }
 
+@Composable
+private fun HospitalDetailsTab(selectedTab: TabType){
+
+}
+
+private enum class TabType {
+    DETAILS, REVIEWS
+}
 
 @Preview(apiLevel = 34)
 @Composable
@@ -121,7 +136,7 @@ private fun HospitalScreenPreview() {
                 event = MutableSharedFlow()
             ),
             data = HospitalData(
-                data = ""
+                hospital = HospitalDetail.stub
             )
         )
     }

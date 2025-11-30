@@ -19,7 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.domain.model.feature.diagnosis.AiDiagnosis
 import com.example.domain.model.feature.diagnosis.FirstAidGuide
 import com.example.domain.model.feature.diagnosis.FirstAidGuideContent
-import com.example.domain.model.feature.hospitals.HospitalCard
+import com.example.domain.model.feature.hospitals.MatchedHospital
 import com.example.domain.model.type.EmergencyLevel
 import com.example.presentation.component.theme.PetbulanceTheme
 import com.example.presentation.component.ui.atom.IconResource
@@ -114,7 +114,7 @@ private fun ReportScreenContents(
     screenState: ReportScreenState,
     aiDiagnosis: AiDiagnosis,
     userLocation: String,
-    matchedHospitals: List<HospitalCard>,
+    matchedHospitals: List<MatchedHospital>,
     onHospitalMatchingResultClicked: () -> Unit,
     onFirstAidGuideClicked: () -> Unit,
 ) {
@@ -190,7 +190,7 @@ private fun ReportScreenPreview() {
                     confidence = 0.88f
                 ),
                 userLocation = "서울 마포시",
-                matchedHospitals = listOf(HospitalCard.stub(), HospitalCard.stub())
+                matchedHospitals = listOf(MatchedHospital.stub(), MatchedHospital.stub())
             )
         )
     }

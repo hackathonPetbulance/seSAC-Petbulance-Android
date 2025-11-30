@@ -3,7 +3,6 @@ package com.example.data.repository.feature.diagnosis
 import androidx.core.net.toUri
 import com.example.data.remote.network.feature.diagnosis.DiagnosisApi
 import com.example.data.remote.network.feature.diagnosis.model.DiagnosisResponse
-import com.example.data.remote.network.feature.diagnosis.model.toDomain
 import com.example.data.utils.safeApiCall
 import com.example.domain.model.feature.diagnosis.AiDiagnosis
 import com.example.domain.repository.feature.diagnosis.DiagnosisRepository

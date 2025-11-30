@@ -26,11 +26,11 @@ fun NavGraphBuilder.homeDestination(navController: NavController) {
 
         val data: HomeData = let {
 
-            val hospitalCards by viewModel.hospitalCards.collectAsStateWithLifecycle()
+            val hospitalCards by viewModel.matchedHospitalCards.collectAsStateWithLifecycle()
             val hospitalReviews by viewModel.hospitalReviews.collectAsStateWithLifecycle()
 
             HomeData(
-                hospitalCards = hospitalCards,
+                matchedHospitals = hospitalCards,
                 hospitalReviews = hospitalReviews
             )
 

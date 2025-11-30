@@ -5,18 +5,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.domain.model.feature.hospitals.HospitalDetail
 import com.example.presentation.utils.nav.ScreenDestinations
 
 fun NavGraphBuilder.hospitalDestination(navController: NavController) {
     composable(
         route = ScreenDestinations.Hospital.route,
-//        arguments = listOf(
-//            navArgument(name = "") {
-//                type = NavType.LongType
-//                defaultValue = 0L
-//            }
-//        ) -> if route contains arguments
+        arguments = listOf(
+            navArgument(name = "hospitalId") {
+                type = NavType.LongType
+                defaultValue = 0L
+            }
+        )
     ) {
         val viewModel: HospitalViewModel = hiltViewModel()
 
@@ -31,8 +34,9 @@ fun NavGraphBuilder.hospitalDestination(navController: NavController) {
         }
 
         val data: HospitalData = let {
+            val hospital by viewModel.hospital.collectAsStateWithLifecycle()
 
-            HospitalData.empty()
+            HospitalData(hospital = hospital ?: HospitalDetail.stub)
         }
 
         HospitalScreen(

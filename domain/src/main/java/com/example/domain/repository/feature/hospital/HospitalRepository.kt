@@ -1,6 +1,7 @@
 package com.example.domain.repository.feature.hospital
 
-import com.example.domain.model.feature.hospitals.HospitalCard
+import com.example.domain.model.feature.hospitals.HospitalDetail
+import com.example.domain.model.feature.hospitals.MatchedHospital
 import com.example.domain.usecase.feature.hospital.HospitalFilterType
 
 interface HospitalRepository {
@@ -9,5 +10,11 @@ interface HospitalRepository {
         species: String,
         lat: Double,
         lng: Double
-    ): Result<List<HospitalCard>>
+    ): Result<List<MatchedHospital>>
+
+    suspend fun getHospitalDetailInfo(
+        hospitalId: Long,
+        lat: Double,
+        lng: Double
+    ): Result<HospitalDetail>
 }

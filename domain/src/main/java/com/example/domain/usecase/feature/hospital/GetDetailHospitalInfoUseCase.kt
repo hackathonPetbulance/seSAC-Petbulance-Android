@@ -1,0 +1,21 @@
+package com.example.domain.usecase.feature.hospital
+
+import com.example.domain.model.feature.hospitals.HospitalDetail
+import com.example.domain.repository.feature.hospital.HospitalRepository
+import javax.inject.Inject
+
+class GetDetailHospitalInfoUseCase @Inject constructor(
+    private val repository: HospitalRepository
+) {
+    suspend operator fun invoke(
+        hospitalId: Long,
+        lat: Double,
+        lng: Double
+    ): Result<HospitalDetail> {
+        return repository.getHospitalDetailInfo(
+            hospitalId = hospitalId,
+            lat = lat,
+            lng = lng
+        )
+    }
+}

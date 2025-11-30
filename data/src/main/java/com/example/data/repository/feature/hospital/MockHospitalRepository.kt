@@ -1,6 +1,7 @@
 package com.example.data.repository.feature.hospital
 
-import com.example.domain.model.feature.hospitals.HospitalCard
+import com.example.domain.model.feature.hospitals.HospitalDetail
+import com.example.domain.model.feature.hospitals.MatchedHospital
 import com.example.domain.repository.feature.hospital.HospitalRepository
 import com.example.domain.usecase.feature.hospital.HospitalFilterType
 import javax.inject.Inject
@@ -12,11 +13,11 @@ class MockHospitalRepository @Inject constructor() : HospitalRepository {
         species: String,
         lat: Double,
         lng: Double
-    ): Result<List<HospitalCard>> {
+    ): Result<List<MatchedHospital>> {
         return Result.success(
             listOf(
-                HospitalCard.stub(),
-                HospitalCard.stub().copy(
+                MatchedHospital.stub(),
+                MatchedHospital.stub().copy(
                     hospitalId = 10L,
                     name = "병원1",
                     isOpenNow = false,
@@ -27,6 +28,16 @@ class MockHospitalRepository @Inject constructor() : HospitalRepository {
                     todayCloseTime = "21:00"
                 )
             )
+        )
+    }
+
+    override suspend fun getHospitalDetailInfo(
+        hospitalId: Long,
+        lat: Double,
+        lng: Double
+    ): Result<HospitalDetail> {
+        return Result.success(
+            HospitalDetail.stub
         )
     }
 }

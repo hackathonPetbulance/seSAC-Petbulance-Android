@@ -2,7 +2,6 @@ package com.example.domain.model.type
 
 enum class District(val displayName: String)
 
-/* TODO : 도메인 검증 필요 */
 enum class Region(
     val displayName: String,
     val districts: List<String>

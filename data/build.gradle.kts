@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.library)
@@ -8,14 +10,33 @@ plugins {
     alias(libs.plugins.devtoolsKsp)
 }
 
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
 android {
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     namespace = "com.example.data"
     compileSdk = 36
 
     defaultConfig {
         minSdk = 26
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField(
+            "String",
+            "SERVER_URL",
+            "\"${localProperties["SERVER_URL"]}\""
+        )
+
     }
 
     buildTypes {

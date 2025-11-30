@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MatchingHospitalsResponse(
-    val hospitals: List<HospitalResponse>
+    val hospitals: List<MatchingHospitals>
 )
 
 @Serializable
-data class HospitalResponse(
+data class MatchingHospitals(
     val hospitalId: Long,
     val thumbnailUrl: String,
     val name: String,

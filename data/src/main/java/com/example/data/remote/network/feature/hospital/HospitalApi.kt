@@ -29,4 +29,16 @@ class HospitalApi @Inject constructor(
             parameter("lng", lng)
         }
     }
+
+    suspend fun getHospitalDetailInfo(
+        hospitalId: Long,
+        lat: Double,
+        lng: Double
+    ): HttpResponse {
+        return client.get(baseUrl+"$hospitalId") {
+            contentType(ContentType.Application.Json)
+            parameter("lat", lat)
+            parameter("lng", lng)
+        }
+    }
 }

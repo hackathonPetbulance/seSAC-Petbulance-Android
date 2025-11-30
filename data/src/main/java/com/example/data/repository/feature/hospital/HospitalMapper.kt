@@ -1,15 +1,15 @@
 package com.example.data.repository.feature.hospital
 
-import com.example.data.remote.network.feature.hospital.model.HospitalResponse
+import com.example.data.remote.network.feature.hospital.model.MatchingHospitals
 import com.example.data.remote.network.feature.hospital.model.MatchingHospitalsResponse
-import com.example.domain.model.feature.hospitals.HospitalCard
+import com.example.domain.model.feature.hospitals.MatchedHospital
 
-fun MatchingHospitalsResponse.toHospitalCardList(): List<HospitalCard> {
+fun MatchingHospitalsResponse.toHospitalCardList(): List<MatchedHospital> {
     return this.hospitals.map { it.toDomain() }
 }
 
-fun HospitalResponse.toDomain(): HospitalCard {
-    return HospitalCard(
+fun MatchingHospitals.toDomain(): MatchedHospital {
+    return MatchedHospital(
         hospitalId = this.hospitalId,
         thumbnailUrl = this.thumbnailUrl,
         name = this.name,

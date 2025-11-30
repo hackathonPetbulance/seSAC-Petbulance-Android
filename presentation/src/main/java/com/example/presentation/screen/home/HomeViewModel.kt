@@ -3,7 +3,7 @@ package com.example.presentation.screen.home
 import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
-import com.example.domain.model.feature.hospitals.HospitalCard
+import com.example.domain.model.feature.hospitals.MatchedHospital
 import com.example.domain.model.feature.reviews.HospitalReview
 import com.example.domain.usecase.feature.hospital.GetNearByHospitalUseCase
 import com.example.presentation.utils.BaseViewModel
@@ -28,8 +28,8 @@ class HomeViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<HomeEvent>()
     val eventFlow: SharedFlow<HomeEvent> = _eventFlow
-    private val _hospitalCards = MutableStateFlow(emptyList<HospitalCard>())
-    val hospitalCards: StateFlow<List<HospitalCard>> = _hospitalCards
+    private val _Matched_hospitalCards = MutableStateFlow(emptyList<MatchedHospital>())
+    val matchedHospitalCards: StateFlow<List<MatchedHospital>> = _Matched_hospitalCards
 
     private val _hospitalReviews = MutableStateFlow(emptyList<HospitalReview>())
     val hospitalReviews: StateFlow<List<HospitalReview>> = _hospitalReviews
@@ -57,7 +57,7 @@ class HomeViewModel @Inject constructor(
                             "siria22",
                             "Request Success from : ${location.latitude},${location.longitude}"
                         )
-                        _hospitalCards.value = result.getOrThrow()
+                        _Matched_hospitalCards.value = result.getOrThrow()
                     }.onFailure { ex ->
                         _eventFlow.emit(
                             HomeEvent.DataFetch.Error(
