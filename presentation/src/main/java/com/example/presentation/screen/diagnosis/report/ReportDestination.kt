@@ -26,7 +26,8 @@ fun NavGraphBuilder.reportDestination(navController: NavController) {
         val argument = ReportArgument(
             state = reportViewModel.state.collectAsStateWithLifecycle().value,
             screenState = reportViewModel.screenState.collectAsStateWithLifecycle().value,
-            intent = reportViewModel::onIntent,
+            reportIntent = reportViewModel::onIntent,
+            diagnosisIntent = diagnosisViewModel::onIntent,
             event = reportViewModel.eventFlow
         )
 

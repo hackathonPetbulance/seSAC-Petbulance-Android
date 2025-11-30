@@ -1,7 +1,5 @@
 package com.example.domain.model.feature.hospitals
 
-import com.example.domain.model.type.AnimalSpecies
-
 data class HospitalDetail(
     val hospitalId: Long,
     val name: String,
@@ -47,6 +45,16 @@ data class HospitalDetail(
                 OpenHours(day = "SAT", hours = "09:00 - 18:00"),
                 OpenHours(day = "SUN", hours = "09:00 - 18:00")
             )
+        )
+    }
+
+    fun toMarker(): HospitalMarker {
+        return HospitalMarker(
+            hospitalId = hospitalId,
+            longitude = location.lng,
+            latitude = location.lat,
+            isOpened = openNow,
+            isSelected = false
         )
     }
 }

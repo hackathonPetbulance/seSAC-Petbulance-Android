@@ -6,9 +6,9 @@ import android.net.Uri
 import android.util.Log
 import com.example.domain.model.feature.diagnosis.AiDiagnosis
 import com.example.domain.model.feature.hospitals.MatchedHospital
+import com.example.domain.model.type.HospitalFilterType
 import com.example.domain.usecase.feature.diagnosis.RequestDiagnosisUseCase
 import com.example.domain.usecase.feature.hospital.GetHospitalWithFilterUseCase
-import com.example.domain.usecase.feature.hospital.HospitalFilterType
 import com.example.presentation.utils.BaseViewModel
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -76,15 +76,16 @@ class DiagnosisViewModel @Inject constructor(
                     requestDiagnosis(onUpload = intent.onUpload)
                 }
             }
+
+            is DiagnosisIntent.MatchHospitalByFilter -> {
+                launch { getNearByHospital(intent.filter) }
+            }
         }
     }
 
     private suspend fun requestDiagnosis(onUpload: (Long, Long) -> Unit) {
         _state.value = DiagnosisState.OnProgress
-        Log.d(
-            "siria22",
-            "Request Diagnosis Request images : \n${_imageUris.value.map { it.toString() }}"
-        )
+
         runCatching {
             requestDiagnosisUseCase(
                 images = _imageUris.value.take(3).map { it.toString() },
@@ -115,7 +116,7 @@ class DiagnosisViewModel @Inject constructor(
     }
 
     @SuppressLint("MissingPermission")
-    private fun getNearByHospital() {
+    private suspend fun getNearByHospital(filter: HospitalFilterType) {
         _state.value = DiagnosisState.OnProgress
 
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
@@ -123,7 +124,7 @@ class DiagnosisViewModel @Inject constructor(
                 launch {
                     runCatching {
                         getHospitalWithFilterUseCase(
-                            filter = HospitalFilterType.DISTANCE,
+                            filter = filter,
                             species = _animalSpecies.value,
                             location.latitude,
                             location.longitude

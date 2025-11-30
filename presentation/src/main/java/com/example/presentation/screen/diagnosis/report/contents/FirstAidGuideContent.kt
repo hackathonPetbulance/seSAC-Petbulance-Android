@@ -50,9 +50,7 @@ fun FirstAidGuideContents(
             .padding(CommonPadding)
     ) {
         Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(CommonPadding),
+            modifier = Modifier.verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             SummaryCard(emergencyLevel, animalType, suspectedDisease)

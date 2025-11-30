@@ -94,6 +94,9 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.kotlinx.coroutines.play.services)
 
+    // Naver Map
+    implementation(libs.map.sdk)
+
     // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

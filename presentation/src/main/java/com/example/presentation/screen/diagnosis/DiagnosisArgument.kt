@@ -1,6 +1,7 @@
 package com.example.presentation.screen.diagnosis
 
 import android.net.Uri
+import com.example.domain.model.type.HospitalFilterType
 import com.example.presentation.utils.error.ErrorEvent
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -19,8 +20,8 @@ sealed class DiagnosisIntent {
     data class UpdateAnimalSpecies(val species: String) : DiagnosisIntent()
     data class UpdateDescription(val description: String) : DiagnosisIntent()
     data class UpdateImageUris(val uri: Uri?, val index: Int) : DiagnosisIntent()
-
     data class RequestDiagnosis(val onUpload: (Long, Long) -> Unit) : DiagnosisIntent()
+    data class MatchHospitalByFilter(val filter: HospitalFilterType) : DiagnosisIntent()
 }
 
 

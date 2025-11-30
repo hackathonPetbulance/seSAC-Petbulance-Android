@@ -27,8 +27,8 @@ fun WarningCard() {
             .padding(16.dp)
     ) {
         Text(
-            text = "⚠ 이 가이드는 응급 상황을 돕기 위한 참고용입니다.\n" +
-                    "정확한 진단과 치료는 반드시 수의사의 판단이 필요합니다. ",
+            text = "이 내용은 보호자의 판단을 돕기 위해 펫뷸런스 AI가 제공하는 응급 처치 가이드로, " +
+                    "조금이라도 상태가 심각해 보이거나 애매하면 즉시 동물병원을 방문해 주세요.",
             style = MaterialTheme.typography.labelSmall,
             color = colorScheme.textPrimary
         )

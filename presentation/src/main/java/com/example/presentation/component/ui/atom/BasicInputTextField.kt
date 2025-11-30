@@ -36,7 +36,7 @@ import com.example.presentation.component.theme.PetbulanceTheme
  * @param onValueChange The callback to be triggered when the text field value changes.
  * @param modifier (Optional) The modifier to be applied to the text field.
  * @param textStyle (Optional) The style to be applied to the text in the text field.
- * @param placeholder (Optional) The placeholder text to be displayed when the text field is empty.
+ * @param placeholder (Optional) The placeholder text to be displayed when the text field is stub.
  * @param singleLine (Optional) Whether the text field should be a single line or not.
  * @param keyboardOptions (Optional) The options for the keyboard to be displayed for the text field.
  */

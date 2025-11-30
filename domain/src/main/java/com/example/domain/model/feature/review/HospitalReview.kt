@@ -1,4 +1,4 @@
-package com.example.domain.model.feature.reviews
+package com.example.domain.model.feature.review
 
 import com.example.domain.model.type.AnimalCategory
 import java.time.LocalDateTime

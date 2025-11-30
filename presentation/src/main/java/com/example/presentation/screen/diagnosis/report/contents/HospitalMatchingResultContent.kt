@@ -46,7 +46,8 @@ fun HospitalMatchingResult(
     userLocation: String,
     emergencyLevel: EmergencyLevel,
     animalType: String,
-    onFirstAidGuideClicked: () -> Unit
+    onFirstAidGuideClicked: () -> Unit,
+    onHospitalMatchRequest: (HospitalFilterType) -> Unit
 ) {
     var currentFilter by remember { mutableStateOf(HospitalFilterType.DISTANCE) }
 
@@ -68,7 +69,10 @@ fun HospitalMatchingResult(
 
             FilterChip(
                 currentFilter = currentFilter,
-                onFilterChipClicked = { currentFilter = it }
+                onFilterChipClicked = {
+                    currentFilter = it
+                    onHospitalMatchRequest(it)
+                }
             )
 
             Column(
@@ -97,7 +101,7 @@ fun HospitalMatchingResult(
                     tint = Color(0XFF067DFD)
                 )
                 Text(
-                    text = " 2025.11.28 팀 직접 전화 검증 완료",
+                    text = " 팀 펫뷸런스 전화 검증 완료 (25.11.28)",
                     style = MaterialTheme.typography.labelSmall,
                     color = colorScheme.textPrimary
                 )
@@ -175,7 +179,8 @@ private fun HospitalMatchingResultPreview() {
             userLocation = "서울 마포구",
             emergencyLevel = EmergencyLevel.MIDDLE,
             animalType = "앵무새",
-            onFirstAidGuideClicked = {}
+            onFirstAidGuideClicked = {},
+            onHospitalMatchRequest = {}
         )
     }
 }

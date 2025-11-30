@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.domain.model.feature.hospitals.MatchedHospital
-import com.example.domain.model.feature.reviews.HospitalReview
+import com.example.domain.model.feature.review.HospitalReview
 import com.example.domain.model.type.AnimalCategory
 import com.example.domain.model.type.toKorean
 import com.example.presentation.component.theme.PetbulanceTheme

@@ -7,8 +7,8 @@ import com.example.data.repository.feature.diagnosis.toDomain
 import com.example.data.utils.safeApiCall
 import com.example.domain.model.feature.hospitals.HospitalDetail
 import com.example.domain.model.feature.hospitals.MatchedHospital
+import com.example.domain.model.type.HospitalFilterType
 import com.example.domain.repository.feature.hospital.HospitalRepository
-import com.example.domain.usecase.feature.hospital.HospitalFilterType
 import javax.inject.Inject
 
 class HospitalRepositoryImpl @Inject constructor(

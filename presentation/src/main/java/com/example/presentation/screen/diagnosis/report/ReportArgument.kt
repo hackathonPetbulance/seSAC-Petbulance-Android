@@ -1,10 +1,12 @@
 package com.example.presentation.screen.diagnosis.report
 
+import com.example.presentation.screen.diagnosis.DiagnosisIntent
 import com.example.presentation.utils.error.ErrorEvent
 import kotlinx.coroutines.flow.SharedFlow
 
 data class ReportArgument(
-    val intent: (ReportIntent) -> Unit,
+    val reportIntent: (ReportIntent) -> Unit,
+    val diagnosisIntent: (DiagnosisIntent) -> Unit,
     val state: ReportState,
     val screenState: ReportScreenState,
     val event: SharedFlow<ReportEvent>

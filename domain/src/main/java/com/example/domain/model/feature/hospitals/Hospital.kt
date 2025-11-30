@@ -16,16 +16,6 @@ data class Hospital(
     val rating: Double,
     val reviewCount: Long
 ) {
-    fun toMarker(): HospitalMarker {
-        return HospitalMarker(
-            hospitalId = hospitalId,
-            longitude = lng,
-            latitude = lat,
-            isOpened = isOpenNow,
-            isSelected = false
-        )
-    }
-
     companion object {
         fun stub() = Hospital(
             hospitalId = 1,

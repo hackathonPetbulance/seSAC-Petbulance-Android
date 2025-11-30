@@ -9,13 +9,13 @@ class GetDetailHospitalInfoUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         hospitalId: Long,
-        lat: Double,
-        lng: Double
+        userLat: Double,
+        userLng: Double
     ): Result<HospitalDetail> {
         return repository.getHospitalDetailInfo(
             hospitalId = hospitalId,
-            lat = lat,
-            lng = lng
+            lat = userLat,
+            lng = userLng
         )
     }
 }

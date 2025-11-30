@@ -18,6 +18,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven(uri("https://repository.map.naver.com/archive/maven"))
+        maven(uri("https://devrepo.kakao.com/nexus/content/groups/public/"))
     }
 }
 

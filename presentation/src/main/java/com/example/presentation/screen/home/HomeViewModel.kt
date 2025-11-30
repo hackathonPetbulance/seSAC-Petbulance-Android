@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
 import com.example.domain.model.feature.hospitals.MatchedHospital
-import com.example.domain.model.feature.reviews.HospitalReview
+import com.example.domain.model.feature.review.HospitalReview
 import com.example.domain.usecase.feature.hospital.GetNearByHospitalUseCase
 import com.example.presentation.utils.BaseViewModel
 import com.google.android.gms.location.LocationServices

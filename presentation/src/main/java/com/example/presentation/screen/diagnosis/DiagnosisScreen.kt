@@ -6,25 +6,27 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.CameraAlt
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Upload
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -62,6 +64,7 @@ import com.example.presentation.component.ui.CommonPadding
 import com.example.presentation.component.ui.atom.BasicButton
 import com.example.presentation.component.ui.atom.BasicButtonWithIcon
 import com.example.presentation.component.ui.atom.BasicCard
+import com.example.presentation.component.ui.atom.BasicDialog
 import com.example.presentation.component.ui.atom.BasicIcon
 import com.example.presentation.component.ui.atom.BasicImageBox
 import com.example.presentation.component.ui.atom.BasicInputTextField
@@ -92,12 +95,15 @@ fun DiagnosisScreen(
     var launchCamera by remember { mutableStateOf(false) }
     var currentSelectedStep by remember { mutableIntStateOf(1) }
 
+    var isHelpDialogVisible by remember { mutableStateOf(false) }
+    var isAddImageDialogVisible by remember { mutableStateOf(false) }
+
     val cameraLauncher = rememberCameraLauncher { uri ->
         argument.intent(DiagnosisIntent.UpdateImageUris(uri, currentSelectedStep))
     }
 
     val galleryLauncher = rememberPhotoPickerLauncher(multiple = false) { uri ->
-        if(uri.isNotEmpty()) {
+        if (uri.isNotEmpty()) {
             argument.intent(DiagnosisIntent.UpdateImageUris(uri.first(), currentSelectedStep))
         }
     }
@@ -119,6 +125,11 @@ fun DiagnosisScreen(
                     isLeadingIconAvailable = true,
                     onLeadingIconClicked = { navController.safePopBackStack() },
                     leadingIconResource = IconResource.Vector(Icons.AutoMirrored.Filled.KeyboardArrowLeft),
+                    trailingIcons = listOf(
+                        Pair(
+                            IconResource.Vector(Icons.Outlined.Info)
+                        ) { isHelpDialogVisible = true }
+                    )
                 ),
             )
         },
@@ -133,13 +144,9 @@ fun DiagnosisScreen(
                     argument.intent(DiagnosisIntent.UpdateAnimalSpecies(it))
                 },
                 onDescriptionChanged = { argument.intent(DiagnosisIntent.UpdateDescription(it)) },
-                onCameraOpenButtonClicked = { idx ->
+                onAddImageIconClicked = { idx ->
                     currentSelectedStep = idx
-                    launchCamera = true
-                },
-                onGalleryOpenClicked = { idx ->
-                    currentSelectedStep = idx
-                    galleryLauncher()
+                    isAddImageDialogVisible = true
                 },
                 onRequestDiagnosisButtonClicked = {
                     argument.intent(
@@ -180,6 +187,67 @@ fun DiagnosisScreen(
             }
         )
     }
+    if (isHelpDialogVisible) {
+        BasicDialog(
+            onDismissRequest = { isHelpDialogVisible = false }
+        ) {
+            Text(
+                text = "왜 3장이 필요한가요?",
+                color = Color.Black,
+                style = typography.titleSmall.emp(),
+            )
+            Text(
+                text = "• 원격 진료 표준은 공통적으로 전신/부위/근접의 3단계 다각도 촬영을 권장합니다",
+                style = typography.bodySmall,
+                color = Color(0xFF5A5A5A)
+            )
+            Text(
+                text = "• 특수동물은 아픈 티를 잘 숨깁니다. 한 장의 사진만으로는 놓치는 정보가 많습니다.",
+                style = typography.bodySmall,
+                color = Color(0xFF5A5A5A)
+            )
+            Text(
+                text = "• 3장의 사진으로 전체 분석이 약 120초 이내에 끝나도록 설계했습니다.",
+                style = typography.bodySmall,
+                color = Color(0xFF5A5A5A)
+            )
+        }
+    }
+
+    if (isAddImageDialogVisible) {
+        BasicDialog(
+            onDismissRequest = { isAddImageDialogVisible = false }
+        ) {
+            Text(
+                text = "증상이 보이는 사진을 선택하거나\n" +
+                        "카메라로 직접 촬영하세요",
+                textAlign = TextAlign.Center,
+                style = typography.labelLarge.emp(),
+                color = Color(0xFF5A5A5A),
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            BasicButtonWithIcon(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                text = "카메라로 촬영",
+                onClicked = {
+                    launchCamera = true
+                    isAddImageDialogVisible = false
+                },
+                type = ButtonType.PRIMARY,
+                iconResource = IconResource.Vector(Icons.Outlined.CameraAlt),
+            )
+            BasicButtonWithIcon(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                text = "갤러리에서 선택",
+                onClicked = {
+                    galleryLauncher()
+                    isAddImageDialogVisible = false
+                },
+                type = ButtonType.DEFAULT,
+                iconResource = IconResource.Vector(Icons.Outlined.Upload)
+            )
+        }
+    }
 }
 
 @Composable
@@ -189,9 +257,8 @@ private fun DiagnosisScreenContents(
     description: String,
     onAnimalSpeciesNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
-    onCameraOpenButtonClicked: (Int) -> Unit,
-    onGalleryOpenClicked: (Int) -> Unit,
     onRequestDiagnosisButtonClicked: () -> Unit,
+    onAddImageIconClicked: (Int) -> Unit,
     onDeletionIconClicked: (Int) -> Unit,
 ) {
     Column(
@@ -201,16 +268,13 @@ private fun DiagnosisScreenContents(
             .padding(CommonPadding),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        GuideCard()
-
         UploadedState(imageUris)
 
         for (idx in 0..2) {
             UploadCard(
                 imageUris[idx],
                 index = idx,
-                { onCameraOpenButtonClicked(idx) },
-                { onGalleryOpenClicked(idx) },
+                onAddImageIconClicked = { onAddImageIconClicked(idx) },
                 onDeletionIconClicked = { onDeletionIconClicked(idx) }
             )
         }
@@ -222,7 +286,8 @@ private fun DiagnosisScreenContents(
             onDescriptionChanged = onDescriptionChanged
         )
 
-        if (imageUris.none { it != null }) {
+        /* TODO : 업로드 조건 확인 */
+        if (false) {
             BasicButton(
                 text = "AI 증상 분석하기 (${imageUris.filter { it != null }.size}/3)",
                 type = ButtonType.DEFAULT,
@@ -235,56 +300,6 @@ private fun DiagnosisScreenContents(
                 onClicked = onRequestDiagnosisButtonClicked
             )
         }
-    }
-}
-
-@Composable
-private fun GuideCard() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .background(
-                color = colorScheme.primary.copy(alpha = 0.2f),
-                shape = RoundedCornerShape(16.dp)
-            )
-            .border(
-                1.dp, colorScheme.primary.copy(0.2f),
-                RoundedCornerShape(16.dp)
-            )
-            .padding(16.dp)
-            .fillMaxWidth(),
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BasicIcon(
-                iconResource = IconResource.Vector(Icons.Default.Info),
-                contentDescription = "Informations",
-                size = 20.dp,
-                tint = colorScheme.primary
-            )
-            Text(
-                text = "왜 3장이 필요한가요?",
-                color = Color.Black,
-                style = typography.titleSmall.emp(),
-            )
-        }
-        Text(
-            text = "• 원격 진료 표준은 공통적으로 전신/부위/근접의 3단계 다각도 촬영을 권장합니다",
-            style = typography.bodySmall.emp(),
-            color = Color(0xFF5A5A5A)
-        )
-        Text(
-            text = "• 특수동물은 아픈 티를 잘 숨깁니다. 한 장의 사진만으로는 놓치는 정보가 많습니다.",
-            style = typography.bodySmall.emp(),
-            color = Color(0xFF5A5A5A)
-        )
-        Text(
-            text = "• 3장의 사진으로 전체 분석이 약 120초 이내에 끝나도록 설계했습니다.",
-            style = typography.bodySmall.emp(),
-            color = Color(0xFF5A5A5A)
-        )
     }
 }
 
@@ -338,9 +353,8 @@ private fun UploadedState(imageUris: List<Uri?>) {
 private fun UploadCard(
     imageUri: Uri?,
     index: Int,
-    onCameraOpenButtonClicked: () -> Unit,
-    onGalleryOpenClicked: () -> Unit,
-    onDeletionIconClicked: () -> Unit
+    onAddImageIconClicked: () -> Unit,
+    onDeletionIconClicked: () -> Unit,
 ) {
     val recommendationText = if (index == 0) "필수" else "권장"
     val recommendationTextColor = if (index == 0) Color(0xFFEF4343) else Color(0xFFFFBB00)
@@ -351,72 +365,40 @@ private fun UploadCard(
         else -> "3단계: 다른 각도나 증상 파악에 도움이 되는 부분을 찍어주세요"
     }
 
-    BasicCard(
-        cardPaddingValue = 12.dp,
-        contentPaddingValue = 4.dp
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = recommendationText,
-            color = recommendationTextColor,
-            style = typography.labelMedium.emp()
-        )
-        Text(
-            text = recommendationDescriptionText,
-            color = colorScheme.caption,
-            style = typography.labelMedium.emp()
-        )
-
-        Spacer(modifier = Modifier.padding(vertical = 4.dp))
-
-        if (imageUri == null) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .drawBehind {
-                        val stroke = Stroke(
-                            width = 1.dp.toPx(),
-                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
-                        )
-                        drawRoundRect(
-                            color = Color.Gray,
-                            style = stroke,
-                            cornerRadius = CornerRadius(16.dp.toPx())
-                        )
-                    }
-                    .padding(vertical = 24.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "증상이 보이는 사진을 선택하거나\n" +
-                            "카메라로 직접 촬영하세요",
-                    textAlign = TextAlign.Center,
-                    style = typography.bodySmall,
-                    color = Color(0xFF5A5A5A)
+        BasicCard(
+            modifier = Modifier
+                .size(150.dp)
+                .drawBehind {
+                    val stroke = Stroke(
+                        width = 4.dp.toPx(),
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                    )
+                    drawRoundRect(
+                        color = Color(0xFFEDEDED),
+                        style = stroke,
+                        cornerRadius = CornerRadius(16.dp.toPx())
+                    )
+                },
+            borderColor = Color.Transparent,
+            backgroundColor = Color(0xFFFAFAFA),
+            cardPaddingValue = 0.dp
+        ) {
+            if (imageUri == null) {
+                BasicIcon(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable {
+                            onAddImageIconClicked()
+                        },
+                    iconResource = IconResource.Vector(Icons.Default.Add),
+                    contentDescription = "Add image",
+                    size = 12.dp,
+                    tint = Color(0xFF9E9E9E)
                 )
-                BasicButtonWithIcon(
-                    modifier = Modifier.fillMaxWidth(0.5f),
-                    text = "카메라로 촬영",
-                    onClicked = onCameraOpenButtonClicked,
-                    type = ButtonType.PRIMARY,
-                    iconResource = IconResource.Vector(Icons.Outlined.CameraAlt),
-                )
-                BasicButtonWithIcon(
-                    modifier = Modifier.fillMaxWidth(0.5f),
-                    text = "갤러리에서 선택",
-                    onClicked = onGalleryOpenClicked,
-                    type = ButtonType.DEFAULT,
-                    iconResource = IconResource.Vector(Icons.Outlined.Upload)
-                )
-            }
-        } else {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(vertical = 24.dp)
-                    .fillMaxWidth()
-            ) {
+            } else {
                 BasicImageBox(
                     modifier = Modifier.fillMaxWidth(),
                     galleryUri = imageUri,
@@ -425,6 +407,19 @@ private fun UploadCard(
                     onDeletionIconClicked = onDeletionIconClicked
                 )
             }
+        }
+
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(
+                text = recommendationText,
+                color = recommendationTextColor,
+                style = typography.labelMedium.emp()
+            )
+            Text(
+                text = recommendationDescriptionText,
+                color = colorScheme.caption,
+                style = typography.labelMedium.emp()
+            )
         }
     }
 }
@@ -450,25 +445,39 @@ private fun UserInputSection(
         )
 
         Box {
-            val iconResource = Icons.Default.KeyboardArrowDown
-            Row(
-                modifier = Modifier.clickable { isMenuOpened = !isMenuOpened },
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(
+                    modifier = Modifier.clickable { isMenuOpened = !isMenuOpened },
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = animalSpecies.ifBlank { "동물종" },
+                        color = colorScheme.textPrimary,
+                        style = typography.bodyLarge,
+                    )
+                    BasicIcon(
+                        iconResource = IconResource.Vector(Icons.Default.KeyboardArrowDown),
+                        contentDescription = "Drop down menu",
+                        size = 20.dp,
+                        tint = colorScheme.textPrimary
+                    )
+                }
+
                 Text(
-                    text = animalSpecies.ifBlank { "동물종" },
+                    text = "주요 증상",
                     color = colorScheme.textPrimary,
                     style = typography.bodyLarge,
                 )
-                BasicIcon(
-                    iconResource = IconResource.Vector(iconResource),
-                    contentDescription = "Drop down menu",
-                    size = 20.dp,
-                    tint = colorScheme.textPrimary
+
+                BasicInputTextField(
+                    value = description,
+                    onValueChange = { onDescriptionChanged(it) },
+                    placeholder = "예: 식욕 없음, 활동량 감소, 배변 이상 등",
+                    singleLine = false,
+                    sizeFactor = 4
                 )
             }
-
             if (isMenuOpened) {
                 Box(modifier = Modifier.padding(top = 24.dp)) {
                     DropdownMenu(
@@ -510,20 +519,6 @@ private fun UserInputSection(
                 }
             }
         }
-
-        Text(
-            text = "주요 증상",
-            color = colorScheme.textPrimary,
-            style = typography.bodyLarge,
-        )
-
-        BasicInputTextField(
-            value = description,
-            onValueChange = { onDescriptionChanged(it) },
-            placeholder = "예: 식욕 없음, 활동량 감소, 배변 이상 등",
-            singleLine = false,
-            sizeFactor = 4
-        )
     }
 }
 
@@ -552,7 +547,7 @@ private fun UserTextInputSectionPreview() {
 @Composable
 private fun UploadCardPreview() {
     PetbulanceTheme {
-        UploadCard(null, 1, {}, {}, {})
+        UploadCard(null, 1, {}, {})
     }
 }
 

@@ -1,7 +1,7 @@
 package com.example.presentation.screen.home
 
 import com.example.domain.model.feature.hospitals.MatchedHospital
-import com.example.domain.model.feature.reviews.HospitalReview
+import com.example.domain.model.feature.review.HospitalReview
 
 data class HomeData(
     val matchedHospitals: List<MatchedHospital>,

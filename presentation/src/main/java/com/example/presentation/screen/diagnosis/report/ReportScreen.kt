@@ -21,6 +21,7 @@ import com.example.domain.model.feature.diagnosis.FirstAidGuide
 import com.example.domain.model.feature.diagnosis.FirstAidGuideContent
 import com.example.domain.model.feature.hospitals.MatchedHospital
 import com.example.domain.model.type.EmergencyLevel
+import com.example.domain.model.type.HospitalFilterType
 import com.example.presentation.component.theme.PetbulanceTheme
 import com.example.presentation.component.ui.atom.IconResource
 import com.example.presentation.component.ui.organism.AppTopBar
@@ -28,6 +29,7 @@ import com.example.presentation.component.ui.organism.BottomNavigationBar
 import com.example.presentation.component.ui.organism.CurrentBottomNav
 import com.example.presentation.component.ui.organism.TopBarAlignment
 import com.example.presentation.component.ui.organism.TopBarInfo
+import com.example.presentation.screen.diagnosis.DiagnosisIntent
 import com.example.presentation.screen.diagnosis.report.contents.FirstAidGuideContents
 import com.example.presentation.screen.diagnosis.report.contents.HospitalMatchingResult
 import com.example.presentation.screen.diagnosis.report.contents.ReportSummary
@@ -85,12 +87,15 @@ fun ReportScreen(
                 screenState = screenState,
                 aiDiagnosis = aiDiagnosis,
                 userLocation = userLocation,
-                matchedHospitals=matchedHospitals,
+                matchedHospitals = matchedHospitals,
                 onHospitalMatchingResultClicked = {
-                    argument.intent(ReportIntent.ScreenTransition(ReportScreenState.HospitalMatching))
+                    argument.reportIntent(ReportIntent.ScreenTransition(ReportScreenState.HospitalMatching))
                 },
                 onFirstAidGuideClicked = {
-                    argument.intent(ReportIntent.ScreenTransition(ReportScreenState.FirstAidGuide))
+                    argument.reportIntent(ReportIntent.ScreenTransition(ReportScreenState.FirstAidGuide))
+                },
+                onHospitalMatchRequest = { filter ->
+                    argument.diagnosisIntent(DiagnosisIntent.MatchHospitalByFilter(filter))
                 }
             )
         }
@@ -117,6 +122,7 @@ private fun ReportScreenContents(
     matchedHospitals: List<MatchedHospital>,
     onHospitalMatchingResultClicked: () -> Unit,
     onFirstAidGuideClicked: () -> Unit,
+    onHospitalMatchRequest: (HospitalFilterType) -> Unit
 ) {
     when (screenState) {
         ReportScreenState.SummaryReport -> ReportSummary(
@@ -133,7 +139,8 @@ private fun ReportScreenContents(
             userLocation = userLocation,
             emergencyLevel = aiDiagnosis.emergencyLevel,
             animalType = aiDiagnosis.animalType,
-            onFirstAidGuideClicked = onFirstAidGuideClicked
+            onFirstAidGuideClicked = onFirstAidGuideClicked,
+            onHospitalMatchRequest = onHospitalMatchRequest
         )
 
         ReportScreenState.FirstAidGuide -> FirstAidGuideContents(
@@ -154,10 +161,11 @@ private fun ReportScreenPreview() {
         ReportScreen(
             navController = rememberNavController(),
             argument = ReportArgument(
-                intent = { },
+                reportIntent = { },
                 state = ReportState.Init,
                 screenState = ReportScreenState.FirstAidGuide,
-                event = MutableSharedFlow()
+                event = MutableSharedFlow(),
+                diagnosisIntent = { }
             ),
             data = ReportData(
                 aiDiagnosis = AiDiagnosis(

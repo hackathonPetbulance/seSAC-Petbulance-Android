@@ -35,8 +35,14 @@ fun NavGraphBuilder.hospitalDestination(navController: NavController) {
 
         val data: HospitalData = let {
             val hospital by viewModel.hospital.collectAsStateWithLifecycle()
+            val currentUserLocation by viewModel.currentUserLocation.collectAsStateWithLifecycle()
+            val reviews by viewModel.reviews.collectAsStateWithLifecycle()
 
-            HospitalData(hospital = hospital ?: HospitalDetail.stub)
+            HospitalData(
+                hospital = hospital ?: HospitalDetail.stub,
+                currentUserLocation = currentUserLocation,
+                reviews = reviews
+            )
         }
 
         HospitalScreen(

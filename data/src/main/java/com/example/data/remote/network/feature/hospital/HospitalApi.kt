@@ -1,7 +1,7 @@
 package com.example.data.remote.network.feature.hospital
 
 import com.example.data.common.di.network.BASE_URL
-import com.example.domain.usecase.feature.hospital.HospitalFilterType
+import com.example.domain.model.type.HospitalFilterType
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -35,7 +35,7 @@ class HospitalApi @Inject constructor(
         lat: Double,
         lng: Double
     ): HttpResponse {
-        return client.get(baseUrl+"$hospitalId") {
+        return client.get("$baseUrl$hospitalId/matching") {
             contentType(ContentType.Application.Json)
             parameter("lat", lat)
             parameter("lng", lng)

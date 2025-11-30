@@ -1,6 +1,7 @@
 package com.example.domain.usecase.feature.hospital
 
 import com.example.domain.model.feature.hospitals.MatchedHospital
+import com.example.domain.model.type.HospitalFilterType
 import com.example.domain.repository.feature.hospital.HospitalRepository
 import javax.inject.Inject
 

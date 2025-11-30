@@ -2,7 +2,7 @@ package com.example.domain.repository.feature.hospital
 
 import com.example.domain.model.feature.hospitals.HospitalDetail
 import com.example.domain.model.feature.hospitals.MatchedHospital
-import com.example.domain.usecase.feature.hospital.HospitalFilterType
+import com.example.domain.model.type.HospitalFilterType
 
 interface HospitalRepository {
     suspend fun getMatchingHospitals(

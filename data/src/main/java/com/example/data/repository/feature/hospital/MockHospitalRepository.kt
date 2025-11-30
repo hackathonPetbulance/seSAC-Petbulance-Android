@@ -2,8 +2,8 @@ package com.example.data.repository.feature.hospital
 
 import com.example.domain.model.feature.hospitals.HospitalDetail
 import com.example.domain.model.feature.hospitals.MatchedHospital
+import com.example.domain.model.type.HospitalFilterType
 import com.example.domain.repository.feature.hospital.HospitalRepository
-import com.example.domain.usecase.feature.hospital.HospitalFilterType
 import javax.inject.Inject
 
 class MockHospitalRepository @Inject constructor() : HospitalRepository {

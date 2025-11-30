@@ -4,9 +4,11 @@ import com.example.data.remote.local.preference.PreferenceRepositoryImpl
 import com.example.data.repository.ExampleRepositoryImpl
 import com.example.data.repository.feature.diagnosis.MockDiagnosisRepository
 import com.example.data.repository.feature.hospital.MockHospitalRepository
+import com.example.data.repository.feature.review.MockReviewRepository
 import com.example.domain.repository.feature.ExampleRepository
 import com.example.domain.repository.feature.diagnosis.DiagnosisRepository
 import com.example.domain.repository.feature.hospital.HospitalRepository
+import com.example.domain.repository.feature.review.ReviewRepository
 import com.example.domain.usecase.nonfeature.preference.PreferenceRepository
 import dagger.Binds
 import dagger.Module
@@ -41,4 +43,10 @@ abstract class RepositoryModule {
         mock: MockDiagnosisRepository
 //        impl: DiagnosisRepositoryImpl
     ): DiagnosisRepository
+
+    @Binds
+    abstract fun bindReviewRepository(
+        mock: MockReviewRepository
+//        impl: ReviewRepositoryImpl
+    ): ReviewRepository
 }

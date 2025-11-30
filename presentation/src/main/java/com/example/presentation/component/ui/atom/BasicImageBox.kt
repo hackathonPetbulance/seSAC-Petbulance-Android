@@ -80,7 +80,7 @@ fun BasicImageBox(
                 onClick = onDeletionIconClicked,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(4.dp)
+                    .padding(1.dp)
                     .background(Color.Black.copy(alpha = 0.5f), CircleShape)
             ) {
                 Icon(
@@ -127,7 +127,7 @@ fun BasicImageBox(
                 onClick = onDeletionIconClicked,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(4.dp)
+                    .padding(1.dp)
                     .background(Color.Black.copy(alpha = 0.5f), CircleShape)
             ) {
                 Icon(
