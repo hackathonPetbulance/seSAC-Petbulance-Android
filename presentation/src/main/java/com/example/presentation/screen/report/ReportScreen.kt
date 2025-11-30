@@ -1,5 +1,6 @@
-package com.example.presentation.screen.diagnosis.report
+package com.example.presentation.screen.report
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -30,9 +31,9 @@ import com.example.presentation.component.ui.organism.CurrentBottomNav
 import com.example.presentation.component.ui.organism.TopBarAlignment
 import com.example.presentation.component.ui.organism.TopBarInfo
 import com.example.presentation.screen.diagnosis.DiagnosisIntent
-import com.example.presentation.screen.diagnosis.report.contents.FirstAidGuideContents
-import com.example.presentation.screen.diagnosis.report.contents.HospitalMatchingResult
-import com.example.presentation.screen.diagnosis.report.contents.ReportSummary
+import com.example.presentation.screen.report.contents.FirstAidGuideContents
+import com.example.presentation.screen.report.contents.HospitalMatchingResult
+import com.example.presentation.screen.report.contents.ReportSummary
 import com.example.presentation.utils.error.ErrorDialog
 import com.example.presentation.utils.error.ErrorDialogState
 import com.example.presentation.utils.nav.ScreenDestinations
@@ -84,6 +85,7 @@ fun ReportScreen(
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             ReportScreenContents(
+                argument = argument,
                 screenState = screenState,
                 aiDiagnosis = aiDiagnosis,
                 userLocation = userLocation,
@@ -111,11 +113,12 @@ fun ReportScreen(
         )
     }
 
-    // BackHandler { }
+    BackHandler { }
 }
 
 @Composable
 private fun ReportScreenContents(
+    argument: ReportArgument,
     screenState: ReportScreenState,
     aiDiagnosis: AiDiagnosis,
     userLocation: String,
@@ -126,6 +129,7 @@ private fun ReportScreenContents(
 ) {
     when (screenState) {
         ReportScreenState.SummaryReport -> ReportSummary(
+            argument = argument,
             emergencyLevel = aiDiagnosis.emergencyLevel,
             detectedSymptom = aiDiagnosis.detectedSymptoms,
             suspectedDisease = aiDiagnosis.suspectedDisease,
@@ -135,6 +139,7 @@ private fun ReportScreenContents(
         )
 
         ReportScreenState.HospitalMatching -> HospitalMatchingResult(
+            argument = argument,
             hospitals = matchedHospitals,
             userLocation = userLocation,
             emergencyLevel = aiDiagnosis.emergencyLevel,
@@ -144,6 +149,7 @@ private fun ReportScreenContents(
         )
 
         ReportScreenState.FirstAidGuide -> FirstAidGuideContents(
+            argument = argument,
             animalType = aiDiagnosis.animalType,
             emergencyLevel = aiDiagnosis.emergencyLevel,
             suspectedDisease = aiDiagnosis.suspectedDisease,

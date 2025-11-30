@@ -1,5 +1,6 @@
-package com.example.presentation.screen.diagnosis.report.contents
+package com.example.presentation.screen.report.contents
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,9 +41,14 @@ import com.example.presentation.component.ui.atom.BasicIcon
 import com.example.presentation.component.ui.atom.ButtonType
 import com.example.presentation.component.ui.atom.IconResource
 import com.example.presentation.component.ui.molecule.WarningCard
+import com.example.presentation.screen.report.ReportArgument
+import com.example.presentation.screen.report.ReportScreenState
+import com.example.presentation.screen.report.ReportState
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 @Composable
 fun ReportSummary(
+    argument: ReportArgument,
     emergencyLevel: EmergencyLevel,
     detectedSymptom: List<String>,
     suspectedDisease: String,
@@ -87,6 +93,9 @@ fun ReportSummary(
                 modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+    BackHandler {
+        /* TODO : Back handler at Report Summary screen */
     }
 }
 
@@ -256,7 +265,15 @@ private fun ReportSummaryPreview() {
                 "이동 중 보온 유지 필수",
                 "강제 급식 금지"
             ),
-            {}, {}
+            argument = ReportArgument(
+                reportIntent = { },
+                state = ReportState.Init,
+                screenState = ReportScreenState.FirstAidGuide,
+                event = MutableSharedFlow(),
+                diagnosisIntent = { }
+            ),
+            onHospitalMatchingResultClicked = {},
+            onFirstAidGuideClicked = {},
         )
     }
 }

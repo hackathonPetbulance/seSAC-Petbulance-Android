@@ -19,6 +19,7 @@ fun NavGraphBuilder.diagnosisDestination(navController: NavController) {
 
         val argument = DiagnosisArgument(
             state = viewModel.state.collectAsStateWithLifecycle().value,
+            screenState = viewModel.screenState.collectAsStateWithLifecycle().value,
             intent = viewModel::onIntent,
             event = viewModel.eventFlow
         )

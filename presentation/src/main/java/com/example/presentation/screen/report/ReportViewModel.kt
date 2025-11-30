@@ -1,4 +1,4 @@
-package com.example.presentation.screen.diagnosis.report
+package com.example.presentation.screen.report
 
 import com.example.presentation.utils.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -28,6 +28,7 @@ import com.example.presentation.component.theme.PetbulanceTheme
 import com.example.presentation.component.theme.PetbulanceTheme.colorScheme
 import com.example.presentation.component.theme.emp
 import com.example.presentation.component.ui.atom.BasicIcon
+import com.example.presentation.component.ui.atom.CustomGreenLoader
 import com.example.presentation.component.ui.atom.IconResource
 
 @Composable
@@ -49,14 +50,20 @@ fun AppTopBar(
             )
             .background(color = background)
     ) {
-        if (topBarInfo.isLeadingIconAvailable) {
-            TopBarIcon(
-                iconResource = topBarInfo.leadingIconResource,
-                contentDescription = "Leading icon",
-                onIconClicked = topBarInfo.onLeadingIconClicked
-            )
+        if (topBarInfo.isLoading) {
+            Box(modifier = Modifier.size(48.dp)){
+                CustomGreenLoader(modifier = Modifier.align(Alignment.Center))
+            }
         } else {
-            Spacer(modifier = Modifier.padding(24.dp))
+            if (topBarInfo.isLeadingIconAvailable) {
+                TopBarIcon(
+                    iconResource = topBarInfo.leadingIconResource,
+                    contentDescription = "Leading icon",
+                    onIconClicked = topBarInfo.onLeadingIconClicked
+                )
+            } else {
+                Spacer(modifier = Modifier.padding(24.dp))
+            }
         }
 
         Row(
@@ -127,6 +134,7 @@ data class TopBarInfo(
     val isTrailingIconAvailable: Boolean = false,
     val leadingIconResource: IconResource = IconResource.Vector(Icons.AutoMirrored.Filled.KeyboardArrowLeft),
     val trailingIcons: List<Pair<IconResource, () -> Unit>> = emptyList(),
+    val isLoading: Boolean = false,
 )
 
 @Preview(apiLevel = 34)
@@ -141,6 +149,7 @@ private fun AppTopBarPreview() {
             textList.forEach { text ->
                 AppTopBar(
                     topBarInfo = TopBarInfo(
+                        isLoading = true,
                         text = text,
                         textAlignment = TopBarAlignment.CENTER,
                         isLeadingIconAvailable = true,

@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.presentation.screen.diagnosis.diagnosisDestination
 import com.example.presentation.screen.home.homeDestination
 import com.example.presentation.screen.hospital.hospitalDestination
-import com.example.presentation.screen.diagnosis.report.reportDestination
+import com.example.presentation.screen.report.reportDestination
 import com.example.presentation.utils.nav.ScreenDestinations
 
 @RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)

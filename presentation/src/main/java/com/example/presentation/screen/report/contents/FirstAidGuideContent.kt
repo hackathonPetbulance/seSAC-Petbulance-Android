@@ -1,5 +1,6 @@
-package com.example.presentation.screen.diagnosis.report.contents
+package com.example.presentation.screen.report.contents
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,9 +36,15 @@ import com.example.presentation.component.ui.atom.BasicButton
 import com.example.presentation.component.ui.atom.BasicCard
 import com.example.presentation.component.ui.atom.ButtonType
 import com.example.presentation.component.ui.molecule.WarningCard
+import com.example.presentation.screen.report.ReportArgument
+import com.example.presentation.screen.report.ReportIntent
+import com.example.presentation.screen.report.ReportScreenState
+import com.example.presentation.screen.report.ReportState
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 @Composable
 fun FirstAidGuideContents(
+    argument: ReportArgument,
     animalType: String,
     emergencyLevel: EmergencyLevel,
     suspectedDisease: String,
@@ -90,6 +97,10 @@ fun FirstAidGuideContents(
                 onClicked = {/* TODO : navigate to AI Chatbot */ }
             )
         }
+    }
+
+    BackHandler {
+        argument.reportIntent(ReportIntent.ScreenTransition(ReportScreenState.SummaryReport))
     }
 }
 
@@ -218,6 +229,13 @@ private fun NumberedCircle(number: Int) {
 private fun FirstAidGuidePreview() {
     PetbulanceTheme {
         FirstAidGuideContents(
+            argument = ReportArgument(
+                reportIntent = { },
+                state = ReportState.Init,
+                screenState = ReportScreenState.FirstAidGuide,
+                event = MutableSharedFlow(),
+                diagnosisIntent = { }
+            ),
             animalType = "앵무새",
             emergencyLevel = EmergencyLevel.LOW,
             suspectedDisease = "위장관 울혈 증후군 의심",

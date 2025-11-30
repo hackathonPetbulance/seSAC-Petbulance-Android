@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresExtension
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Info
@@ -31,6 +32,7 @@ import androidx.compose.material.icons.outlined.Upload
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
@@ -69,6 +71,7 @@ import com.example.presentation.component.ui.atom.BasicIcon
 import com.example.presentation.component.ui.atom.BasicImageBox
 import com.example.presentation.component.ui.atom.BasicInputTextField
 import com.example.presentation.component.ui.atom.ButtonType
+import com.example.presentation.component.ui.atom.CustomGreenLoader
 import com.example.presentation.component.ui.atom.IconResource
 import com.example.presentation.component.ui.organism.AppTopBar
 import com.example.presentation.component.ui.organism.TopBarAlignment
@@ -81,6 +84,7 @@ import com.example.presentation.utils.hooks.rememberPhotoPickerLauncher
 import com.example.presentation.utils.nav.ScreenDestinations
 import com.example.presentation.utils.nav.safeNavigate
 import com.example.presentation.utils.nav.safePopBackStack
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 @RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
@@ -91,6 +95,7 @@ fun DiagnosisScreen(
     data: DiagnosisData
 ) {
     var errorDialogState by remember { mutableStateOf(ErrorDialogState.idle()) }
+    val screenState = argument.screenState
 
     var launchCamera by remember { mutableStateOf(false) }
     var currentSelectedStep by remember { mutableIntStateOf(1) }
@@ -108,59 +113,112 @@ fun DiagnosisScreen(
         }
     }
 
+    var isReportReady by remember { mutableStateOf(false) }
+    var currentStep by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(argument.screenState) {
+        if (argument.screenState == DiagnosisScreenState.OnProgress) {
+            currentStep = 0 // OnProgress 시작 시 0으로 초기화
+            while (currentStep < 5) {
+                delay(500) // 2.5초 대기
+                currentStep++
+            }
+        }
+    }
+
+    LaunchedEffect(isReportReady, currentStep) {
+        Log.d("siria22", "isReportReady = $isReportReady / currentStep = $currentStep")
+        if (isReportReady && currentStep >= 5) {
+            navController.safeNavigate(ScreenDestinations.Report.route)
+            argument.intent(DiagnosisIntent.SwitchScreenState)
+        }
+    }
+
+
     LaunchedEffect(argument.event) {
         argument.event.collect { event ->
             when (event) {
-                else -> {}
+                is DiagnosisEvent.Request.OnProgress -> {}
+
+                is DiagnosisEvent.Request.Success -> {
+                    isReportReady = true
+                }
+
+                is DiagnosisEvent.Request.Error -> {
+                    errorDialogState.toggleVisibility()
+                }
+
+                is DiagnosisEvent.DataFetch.Error -> {
+                    errorDialogState.toggleVisibility()
+                }
             }
         }
     }
 
     Scaffold(
         topBar = {
-            AppTopBar(
-                topBarInfo = TopBarInfo(
-                    text = "펫뷸런스 AI",
-                    textAlignment = TopBarAlignment.START,
-                    isLeadingIconAvailable = true,
-                    onLeadingIconClicked = { navController.safePopBackStack() },
-                    leadingIconResource = IconResource.Vector(Icons.AutoMirrored.Filled.KeyboardArrowLeft),
-                    trailingIcons = listOf(
-                        Pair(
-                            IconResource.Vector(Icons.Outlined.Info)
-                        ) { isHelpDialogVisible = true }
-                    )
-                ),
-            )
+            if (screenState == DiagnosisScreenState.Upload) {
+                AppTopBar(
+                    topBarInfo = TopBarInfo(
+                        text = "펫뷸런스 AI",
+                        textAlignment = TopBarAlignment.START,
+                        isLeadingIconAvailable = true,
+                        onLeadingIconClicked = { navController.safePopBackStack() },
+                        leadingIconResource = IconResource.Vector(Icons.AutoMirrored.Filled.KeyboardArrowLeft),
+                        trailingIcons = listOf(
+                            Pair(
+                                IconResource.Vector(Icons.Outlined.Info)
+                            ) { isHelpDialogVisible = true }
+                        )
+                    ),
+                )
+            } else {
+                AppTopBar(
+                    topBarInfo = TopBarInfo(
+                        isLoading = true,
+                        text = "AI 증상 분석 중",
+                        textAlignment = TopBarAlignment.START,
+                        isLeadingIconAvailable = true,
+                        onLeadingIconClicked = { argument.intent(DiagnosisIntent.StopDiagnosis) },
+                        leadingIconResource = IconResource.Vector(Icons.AutoMirrored.Filled.KeyboardArrowLeft),
+                    ),
+                )
+            }
         },
         containerColor = colorScheme.bgFrameDefault
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            DiagnosisScreenContents(
-                imageUris = data.imageUris,
-                animalSpecies = data.animalSpecies,
-                description = data.description,
-                onAnimalSpeciesNameChanged = {
-                    argument.intent(DiagnosisIntent.UpdateAnimalSpecies(it))
-                },
-                onDescriptionChanged = { argument.intent(DiagnosisIntent.UpdateDescription(it)) },
-                onAddImageIconClicked = { idx ->
-                    currentSelectedStep = idx
-                    isAddImageDialogVisible = true
-                },
-                onRequestDiagnosisButtonClicked = {
-                    argument.intent(
-                        DiagnosisIntent.RequestDiagnosis(
-                            onUpload = { _, _ -> }
+            if (argument.screenState == DiagnosisScreenState.Upload) {
+                DiagnosisUploadScreenContents(
+                    imageUris = data.imageUris,
+                    animalSpecies = data.animalSpecies,
+                    description = data.description,
+                    onAnimalSpeciesNameChanged = {
+                        argument.intent(DiagnosisIntent.UpdateAnimalSpecies(it))
+                    },
+                    onDescriptionChanged = { argument.intent(DiagnosisIntent.UpdateDescription(it)) },
+                    onAddImageIconClicked = { idx ->
+                        currentSelectedStep = idx
+                        isAddImageDialogVisible = true
+                    },
+                    onRequestDiagnosisButtonClicked = {
+                        argument.intent(
+                            DiagnosisIntent.RequestDiagnosis(
+                                onUpload = { _, _ -> }
+                            )
                         )
-                    )
-                    /* TODO : Navigate to next page : 로딩 */
-                },
-                onDeletionIconClicked = { idx ->
-                    currentSelectedStep = idx
-                    argument.intent(DiagnosisIntent.UpdateImageUris(null, currentSelectedStep))
-                }
-            )
+                    },
+                    onDeletionIconClicked = { idx ->
+                        currentSelectedStep = idx
+                        argument.intent(DiagnosisIntent.UpdateImageUris(null, currentSelectedStep))
+                    }
+                )
+            } else {
+                DiagnosisOnProgressScreenContents(
+                    imageUris = data.imageUris,
+                    currentStep = currentStep
+                )
+            }
         }
     }
 
@@ -169,7 +227,6 @@ fun DiagnosisScreen(
             errorDialogState = errorDialogState,
             errorHandler = {
                 errorDialogState.toggleVisibility()
-                navController.safeNavigate(ScreenDestinations.Home.route)
             }
         )
     }
@@ -251,7 +308,153 @@ fun DiagnosisScreen(
 }
 
 @Composable
-private fun DiagnosisScreenContents(
+private fun DiagnosisOnProgressScreenContents(
+    imageUris: List<Uri?>,
+    currentStep: Int
+) {
+
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
+            .padding(CommonPadding),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val topImage = imageUris.first { it != null }
+        if (topImage != null) {
+            BasicImageBox(
+                size = 280.dp,
+                galleryUri = topImage,
+                isClearable = false
+            )
+        }
+
+        HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+
+        ProgressBar(currentStep = currentStep)
+
+        AnalysisSteps(currentStep = currentStep)
+    }
+}
+
+@Composable
+private fun ProgressBar(currentStep: Int) {
+
+    val targetProgress = (currentStep / 5f)
+    val animatedProgress by animateFloatAsState(
+        targetValue = targetProgress,
+        label = "Progress Animation"
+    )
+    val percentage = (animatedProgress * 100).toInt()
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(vertical = CommonPadding)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "분석 진행률",
+                style = typography.bodyLarge.emp(),
+                color = colorScheme.textPrimary
+            )
+            Text(
+                text = "$percentage%",
+                style = typography.bodyLarge,
+                color = colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        LinearProgressIndicator(
+            progress = { animatedProgress },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp)
+                .clip(RoundedCornerShape(4.dp)),
+            color = colorScheme.primary,
+            trackColor = Color(0xFFEEEEEE)
+        )
+        Text(
+            text = "정확한 분석을 위해 신중하게 검토하고 있습니다",
+            style = typography.bodySmall,
+            color = colorScheme.textSecondary,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+    }
+}
+
+@Composable
+private fun AnalysisSteps(currentStep: Int) {
+    val steps = listOf(
+        "이미지 전처리" to "업로드된 사진의 품질을 최적화하고 증상 부위를 중심으로 분석하고 있습니다",
+        "AI 비전 모델 로딩" to "특수동물 전문 AI 모델을 불러오고 전신 상태를 종합적으로 평가하고 있습니다",
+        "증상 패턴 인식" to "다양한 각도에서 주요 증상을 탐지하고 응급도를 판단하고 있습니다",
+        "의료 데이터베이스 매칭" to "팀 펫뷸런스가 수집한 종별 주요증상 DB와 비교 분석 중입니다",
+        "응급도 분석 결과 생성" to "최종 분석 결과와 권장 조치사항을 정리하고 있습니다"
+    )
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "펫뷸런스 AI가 사진을 분석하고 있습니다.",
+            style = typography.bodyMedium.emp(),
+            color = colorScheme.primary,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        steps.forEachIndexed { index, (title, description) ->
+            val stepNumber = index + 1
+            val isCompleted = stepNumber < currentStep
+            val isInProgress = stepNumber == currentStep
+
+            BasicCard(
+                modifier = Modifier.fillMaxWidth(),
+                cardPaddingValue = 0.dp,
+                backgroundColor = Color(0xFFF5F5F5),
+                borderColor = Color.Transparent
+            ) {
+                Row(
+                    modifier = Modifier.padding(vertical = 12.dp, horizontal = 12.dp),
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Box(modifier = Modifier.size(24.dp)) {
+                        when {
+                            isInProgress -> CustomGreenLoader(modifier = Modifier.align(Alignment.Center))
+                            else -> BasicIcon(
+                                iconResource = IconResource.Vector(Icons.Default.Check),
+                                contentDescription = "Step $stepNumber",
+                                size = 16.dp,
+                                tint = if (isCompleted) colorScheme.primary else Color(0xFFEEEEEE)
+                            )
+                        }
+                    }
+                    Column {
+                        Text(
+                            text = "${stepNumber}단계 : $title",
+                            style = typography.labelLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = colorScheme.textPrimary
+                        )
+                        Text(
+                            text = description,
+                            style = typography.labelMedium,
+                            color = colorScheme.textPrimary
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DiagnosisUploadScreenContents(
     imageUris: List<Uri?>,
     animalSpecies: String,
     description: String,
@@ -543,14 +746,6 @@ private fun UserTextInputSectionPreview() {
     }
 }
 
-@Preview(apiLevel = 34)
-@Composable
-private fun UploadCardPreview() {
-    PetbulanceTheme {
-        UploadCard(null, 1, {}, {})
-    }
-}
-
 @RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
 @Preview(apiLevel = 34)
 @Composable
@@ -561,6 +756,7 @@ private fun DiagnosisScreenPreview() {
             argument = DiagnosisArgument(
                 intent = { },
                 state = DiagnosisState.Init,
+                screenState = DiagnosisScreenState.OnProgress,
                 event = MutableSharedFlow()
             ),
             data = DiagnosisData.empty()

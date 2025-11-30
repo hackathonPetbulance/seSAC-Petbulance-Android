@@ -9,4 +9,6 @@ sealed class ScreenDestinations(val route: String) {
     data object Report : ScreenDestinations("report")
 
     data object Hospital : ScreenDestinations("Hospital")
+
+    data object Progress : ScreenDestinations("Progress")
 }

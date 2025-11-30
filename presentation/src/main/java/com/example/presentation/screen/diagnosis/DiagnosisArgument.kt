@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.SharedFlow
 data class DiagnosisArgument(
     val intent: (DiagnosisIntent) -> Unit,
     val state: DiagnosisState,
+    val screenState: DiagnosisScreenState,
     val event: SharedFlow<DiagnosisEvent>
 )
 
@@ -16,17 +17,34 @@ sealed class DiagnosisState {
     data object OnProgress : DiagnosisState()
 }
 
+sealed class DiagnosisScreenState {
+    data object Upload: DiagnosisScreenState()
+    data object OnProgress: DiagnosisScreenState()
+}
+
 sealed class DiagnosisIntent {
     data class UpdateAnimalSpecies(val species: String) : DiagnosisIntent()
     data class UpdateDescription(val description: String) : DiagnosisIntent()
     data class UpdateImageUris(val uri: Uri?, val index: Int) : DiagnosisIntent()
     data class RequestDiagnosis(val onUpload: (Long, Long) -> Unit) : DiagnosisIntent()
     data class MatchHospitalByFilter(val filter: HospitalFilterType) : DiagnosisIntent()
+
+    data object SwitchScreenState: DiagnosisIntent()
+    data object StopDiagnosis : DiagnosisIntent()
 }
 
 
 sealed class DiagnosisEvent {
-    data object RequestSuccess : DiagnosisEvent()
+
+    sealed class Request : DiagnosisEvent() {
+        data object OnProgress : Request()
+        data object Success: Request()
+        data class Error(
+            override val userMessage: String = "문제가 발생했습니다.",
+            override val exceptionMessage: String?
+        ) : Request(), ErrorEvent
+    }
+
     sealed class DataFetch : DiagnosisEvent() {
         data class Error(
             override val userMessage: String = "문제가 발생했습니다.",

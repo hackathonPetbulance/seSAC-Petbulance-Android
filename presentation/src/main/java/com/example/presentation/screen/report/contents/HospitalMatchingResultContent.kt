@@ -1,5 +1,6 @@
-package com.example.presentation.screen.diagnosis.report.contents
+package com.example.presentation.screen.report.contents
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.feature.hospitals.MatchedHospital
@@ -39,9 +42,15 @@ import com.example.presentation.component.ui.atom.BasicSelectableChip
 import com.example.presentation.component.ui.atom.ButtonType
 import com.example.presentation.component.ui.atom.IconResource
 import com.example.presentation.component.ui.molecule.HospitalCard
+import com.example.presentation.screen.report.ReportArgument
+import com.example.presentation.screen.report.ReportIntent
+import com.example.presentation.screen.report.ReportScreenState
+import com.example.presentation.screen.report.ReportState
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 @Composable
 fun HospitalMatchingResult(
+    argument: ReportArgument,
     hospitals: List<MatchedHospital>,
     userLocation: String,
     emergencyLevel: EmergencyLevel,
@@ -79,32 +88,20 @@ fun HospitalMatchingResult(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                hospitals.forEach { hospital ->
-                    HospitalCard(hospital)
-                }
-            }
+                if(hospitals.isNotEmpty()) {
+                    hospitals.forEach { hospital ->
+                        HospitalCard(hospital)
+                    }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = Color(0XFFF5F5F5),
-                        shape = RoundedCornerShape(4.dp)
+                    CheckedByTeam(modifier = Modifier.fillMaxWidth())
+                } else {
+                    Text(
+                        text = "조건에 맞는 병원이 없어요",
+                        color = colorScheme.textPrimary,
+                        style = typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                        modifier = Modifier.padding(12.dp)
                     )
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                BasicIcon(
-                    iconResource = IconResource.Vector(Icons.Default.CheckCircle),
-                    contentDescription = "Verified",
-                    size = 16.dp,
-                    tint = Color(0XFF067DFD)
-                )
-                Text(
-                    text = " 팀 펫뷸런스 전화 검증 완료 (25.11.28)",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = colorScheme.textPrimary
-                )
+                }
             }
         }
         Column(
@@ -118,6 +115,10 @@ fun HospitalMatchingResult(
                 onClicked = onFirstAidGuideClicked
             )
         }
+    }
+
+    BackHandler {
+        argument.reportIntent(ReportIntent.ScreenTransition(ReportScreenState.SummaryReport))
     }
 }
 
@@ -137,12 +138,12 @@ private fun ResultCard(
         Text(
             text = "$userLocation 기준 ${hospitalCounts}개 병원을 찾았어요.",
             color = colorScheme.textPrimary,
-            style = MaterialTheme.typography.bodyLarge,
+            style = typography.bodyLarge,
         )
 
         Text(
             text = "응급도 ${emergencyLevel.toKorean()} / $animalType / 현재 시간 기준 진료 가능",
-            style = MaterialTheme.typography.labelSmall,
+            style = typography.labelSmall,
             color = colorScheme.caption
         )
     }
@@ -170,11 +171,43 @@ private fun FilterChip(
     }
 }
 
+@Composable
+private fun CheckedByTeam(modifier: Modifier = Modifier){
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .background(
+                color = Color(0XFFF5F5F5),
+                shape = RoundedCornerShape(4.dp)
+            )
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        BasicIcon(
+            iconResource = IconResource.Vector(Icons.Default.CheckCircle),
+            contentDescription = "Verified",
+            size = 16.dp,
+            tint = Color(0XFF067DFD)
+        )
+        Text(
+            text = " 팀 펫뷸런스 전화 검증 완료 (25.11.28)",
+            style = MaterialTheme.typography.labelSmall,
+            color = colorScheme.textPrimary
+        )
+    }
+}
+
 @Preview(apiLevel = 34)
 @Composable
 private fun HospitalMatchingResultPreview() {
     PetbulanceTheme {
         HospitalMatchingResult(
+            argument = ReportArgument(
+                reportIntent = { },
+                state = ReportState.Init,
+                screenState = ReportScreenState.FirstAidGuide,
+                event = MutableSharedFlow(),
+                diagnosisIntent = { }
+            ),
             hospitals = listOf(MatchedHospital.stub(), MatchedHospital.stub()),
             userLocation = "서울 마포구",
             emergencyLevel = EmergencyLevel.MIDDLE,

@@ -1,4 +1,4 @@
-package com.example.presentation.screen.diagnosis.report
+package com.example.presentation.screen.report
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -17,7 +17,7 @@ fun NavGraphBuilder.reportDestination(navController: NavController) {
     ) { backStackEntry ->
 
         val parentEntry = remember(backStackEntry) {
-            navController.getBackStackEntry(navController.graph.route!!)
+            navController.getBackStackEntry(ScreenDestinations.Diagnosis.route)
         }
 
         val diagnosisViewModel: DiagnosisViewModel = hiltViewModel(parentEntry)

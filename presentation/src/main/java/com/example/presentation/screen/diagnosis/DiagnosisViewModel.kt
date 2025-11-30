@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.example.domain.model.feature.diagnosis.AiDiagnosis
 import com.example.domain.model.feature.hospitals.MatchedHospital
 import com.example.domain.model.type.HospitalFilterType
@@ -12,10 +13,12 @@ import com.example.domain.usecase.feature.hospital.GetHospitalWithFilterUseCase
 import com.example.presentation.utils.BaseViewModel
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -32,6 +35,9 @@ class DiagnosisViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<DiagnosisState>(DiagnosisState.Init)
     val state: StateFlow<DiagnosisState> = _state
+
+    private val _screenState = MutableStateFlow<DiagnosisScreenState>(DiagnosisScreenState.Upload)
+    val screenState: StateFlow<DiagnosisScreenState> = _screenState
 
     private val _eventFlow = MutableSharedFlow<DiagnosisEvent>(replay = 1)
     val eventFlow: SharedFlow<DiagnosisEvent> = _eventFlow
@@ -54,9 +60,17 @@ class DiagnosisViewModel @Inject constructor(
     private val _matchedHospitals = MutableStateFlow<List<MatchedHospital>>(emptyList())
     val matchedHospitals: StateFlow<List<MatchedHospital>> = _matchedHospitals
 
+    private var diagnosisJob: Job? = null
 
     fun onIntent(intent: DiagnosisIntent) {
         when (intent) {
+
+            is DiagnosisIntent.SwitchScreenState -> {
+                _screenState.value =
+                    if (_screenState.value == DiagnosisScreenState.Upload) DiagnosisScreenState.OnProgress
+                    else DiagnosisScreenState.Upload
+            }
+
             is DiagnosisIntent.UpdateAnimalSpecies -> {
                 _animalSpecies.value = intent.species
             }
@@ -72,21 +86,37 @@ class DiagnosisViewModel @Inject constructor(
             }
 
             is DiagnosisIntent.RequestDiagnosis -> {
-                launch {
+                diagnosisJob?.cancel()
+                diagnosisJob = viewModelScope.launch {
                     requestDiagnosis(onUpload = intent.onUpload)
                 }
             }
 
             is DiagnosisIntent.MatchHospitalByFilter -> {
-                launch { getNearByHospital(intent.filter) }
+                diagnosisJob?.cancel()
+                diagnosisJob = viewModelScope.launch {
+                    getNearByHospital(intent.filter)
+                }
+            }
+
+            is DiagnosisIntent.StopDiagnosis -> {
+                diagnosisJob?.cancel()
+                _screenState.value = DiagnosisScreenState.Upload
             }
         }
+    }
+
+    override fun onCleared() {
+        diagnosisJob?.cancel()
+        super.onCleared()
     }
 
     private suspend fun requestDiagnosis(onUpload: (Long, Long) -> Unit) {
         _state.value = DiagnosisState.OnProgress
 
         runCatching {
+            _screenState.value = DiagnosisScreenState.OnProgress
+            _eventFlow.emit(DiagnosisEvent.Request.OnProgress)
             requestDiagnosisUseCase(
                 images = _imageUris.value.take(3).map { it.toString() },
                 animalType = _animalSpecies.value,
@@ -102,15 +132,17 @@ class DiagnosisViewModel @Inject constructor(
             )
             result.getOrNull()?.let {
                 _aiDiagnosis.value = it
-                _eventFlow.emit(DiagnosisEvent.RequestSuccess)
+                _eventFlow.emit(DiagnosisEvent.Request.Success)
             }
+            _eventFlow.emit(DiagnosisEvent.Request.Success)
         }.onFailure { exception ->
             _eventFlow.emit(
-                DiagnosisEvent.DataFetch.Error(
-                    userMessage = "진단 요청 중 오류가 발생했습니다.",
+                DiagnosisEvent.Request.Error(
+                    userMessage = "진단 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
                     exceptionMessage = exception.message
                 )
             )
+            _screenState.value = DiagnosisScreenState.Upload
         }
         _state.value = DiagnosisState.Init
     }

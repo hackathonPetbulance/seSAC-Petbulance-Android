@@ -1,4 +1,4 @@
-package com.example.presentation.screen.diagnosis.report
+package com.example.presentation.screen.report
 
 import com.example.domain.model.feature.diagnosis.AiDiagnosis
 import com.example.domain.model.feature.hospitals.MatchedHospital

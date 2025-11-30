@@ -1,6 +1,7 @@
 package com.example.presentation.screen.diagnosis
 
 import android.net.Uri
+import androidx.core.net.toUri
 
 data class DiagnosisData(
     val imageUris: List<Uri?>,
@@ -9,7 +10,7 @@ data class DiagnosisData(
 ) {
     companion object {
         fun empty() = DiagnosisData(
-            imageUris = listOf(null, null, null),
+            imageUris = listOf( "null".toUri(), null, null),
             animalSpecies = "",
             description = ""
         )
