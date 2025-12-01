@@ -78,7 +78,7 @@ fun AppTopBar(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .padding(vertical = 8.dp, horizontal = 12.dp)
+                    .padding(vertical = 8.dp, horizontal = 8.dp)
                     .fillMaxWidth()
             )
         }

@@ -44,7 +44,7 @@ fun BasicImageBox(
     size: Dp = 128.dp,
     galleryUri: Uri?,
     errorImageResource: Int = R.drawable.broken_image,
-    placeholderImageResource: Int = R.drawable.broken_image,
+    placeholderImageResource: Int = R.drawable.broken_image, //TODO : Placeholder 교체
     isClearable: Boolean = false,
     onDeletionIconClicked: () -> Unit = {}
 ) {
@@ -58,8 +58,8 @@ fun BasicImageBox(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(galleryUri ?: placeholderImageResource)
                 .crossfade(true)
-                .error(errorImageResource)
-                .placeholder(placeholderImageResource)
+//                .error(errorImageResource)
+//                .placeholder(placeholderImageResource)
                 .build(),
             modifier = Modifier
                 .matchParentSize()
@@ -72,7 +72,7 @@ fun BasicImageBox(
         )
 
         if (imageState is AsyncImagePainter.State.Loading) {
-            CircularProgressIndicator()
+            CustomGreenLoader()
         }
 
         if (isClearable && imageState is AsyncImagePainter.State.Success) {
@@ -80,14 +80,14 @@ fun BasicImageBox(
                 onClick = onDeletionIconClicked,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(1.dp)
+                    .padding(8.dp)
                     .background(Color.Black.copy(alpha = 0.5f), CircleShape)
             ) {
                 Icon(
                     imageVector = Icons.Default.Clear,
                     contentDescription = "Clear",
                     tint = Color.White,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(12.dp)
                 )
             }
         }
@@ -134,7 +134,7 @@ fun BasicImageBox(
                     imageVector = Icons.Default.Clear,
                     contentDescription = "Clear",
                     tint = Color.White,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(8.dp)
                 )
             }
         }

@@ -1,8 +1,11 @@
 package com.example.presentation.component.ui.atom
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -25,6 +28,16 @@ fun CustomGreenLoader(
         strokeWidth = 4.dp,                      // 선 두께
         strokeCap = StrokeCap.Round              // 선 끝을 둥글게 (이미지와 동일)
     )
+}
+
+@Composable
+fun ContentPlaceholder() {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        CustomGreenLoader()
+    }
 }
 
 @Preview(apiLevel = 34)

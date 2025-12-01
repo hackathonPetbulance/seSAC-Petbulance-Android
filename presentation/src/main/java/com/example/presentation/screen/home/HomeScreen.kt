@@ -8,7 +8,6 @@ import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -64,6 +63,7 @@ import com.example.presentation.component.ui.atom.BasicCard
 import com.example.presentation.component.ui.atom.BasicIcon
 import com.example.presentation.component.ui.atom.BasicSelectableChip
 import com.example.presentation.component.ui.atom.ButtonType
+import com.example.presentation.component.ui.atom.ContentPlaceholder
 import com.example.presentation.component.ui.atom.IconResource
 import com.example.presentation.component.ui.molecule.HospitalCard
 import com.example.presentation.component.ui.molecule.PermissionRequiredCard
@@ -315,11 +315,15 @@ private fun NearByHospitalCards(
             modifier = Modifier.padding(vertical = 4.dp)
         )
         if (hasLocationPermission) {
-            matchedHospitals.forEach { hospital ->
-                HospitalCard(
-                    hospital,
-                    { onHospitalCardClicked(hospital.hospitalId) },
-                    { onNavigateButtonClicked(hospital.hospitalId) })
+            if (matchedHospitals.isEmpty()) {
+                ContentPlaceholder()
+            } else {
+                matchedHospitals.forEach { hospital ->
+                    HospitalCard(
+                        hospital,
+                        { onHospitalCardClicked(hospital.hospitalId) },
+                        { onNavigateButtonClicked(hospital.hospitalId) })
+                }
             }
         } else {
             PermissionRequiredCard("위치 정보 수집 권한")
@@ -367,14 +371,17 @@ private fun HospitalReviews(
         LazyRow(
             state = listState,
             flingBehavior = snapBehavior,
-            contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(hospitalReviews.list) { elem ->
-                HospitalReviewCarouselCard(
-                    modifier = Modifier.width(320.dp), // 고정 너비 설정
-                    review = elem
-                )
+            if (hospitalReviews.list.isEmpty()) {
+                item { ContentPlaceholder() }
+            } else {
+                items(hospitalReviews.list) { elem ->
+                    HospitalReviewCarouselCard(
+                        modifier = Modifier.width(340.dp), // 고정 너비 설정
+                        review = elem
+                    )
+                }
             }
         }
     }

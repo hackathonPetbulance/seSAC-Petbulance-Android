@@ -74,6 +74,9 @@ fun ReportSummary(
             WarningCard()
         }
 
+        val hospitalButtonType = if(emergencyLevel == EmergencyLevel.HIGH) ButtonType.PRIMARY else ButtonType.SECONDARY
+        val firstAidGuideButtonType = if(emergencyLevel == EmergencyLevel.HIGH) ButtonType.SECONDARY else ButtonType.PRIMARY
+
         Column(
             modifier = Modifier.align(Alignment.BottomCenter),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -81,14 +84,14 @@ fun ReportSummary(
         ) {
             BasicButton(
                 text = "지금 진료 가능한 병원",
-                type = ButtonType.PRIMARY,
+                type = hospitalButtonType,
                 onClicked = onHospitalMatchingResultClicked,
                 modifier = Modifier.fillMaxWidth()
             )
 
             BasicButton(
                 text = "응급처치 가이드 보기",
-                type = ButtonType.SECONDARY,
+                type = firstAidGuideButtonType,
                 onClicked = onFirstAidGuideClicked,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -155,7 +158,7 @@ private fun EmergencyCard(emergencyLevel: EmergencyLevel) {
             )
             Text(
                 text = descriptionText,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelSmall.emp(),
                 color = colorScheme.textPrimary
             )
         }
@@ -189,7 +192,7 @@ private fun AiSummaryCard(
 
         Text(
             text = "감지된 주요 증상",
-            style = MaterialTheme.typography.labelSmall.emp(),
+            style = MaterialTheme.typography.labelMedium.emp(),
             color = colorScheme.textPrimary
         )
         Row(
@@ -209,7 +212,7 @@ private fun AiSummaryCard(
 
         Text(
             text = "의심 증상",
-            style = MaterialTheme.typography.labelSmall.emp(),
+            style = MaterialTheme.typography.labelMedium.emp(),
             color = colorScheme.textPrimary
         )
 
@@ -223,7 +226,7 @@ private fun AiSummaryCard(
 
         Text(
             text = "권장 조치",
-            style = MaterialTheme.typography.labelSmall.emp(),
+            style = MaterialTheme.typography.labelMedium.emp(),
             color = colorScheme.textPrimary
         )
 

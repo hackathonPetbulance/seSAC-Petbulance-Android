@@ -72,8 +72,8 @@ fun FirstAidGuideContents(
                         color = Color(0xFF143048),
                         shape = RoundedCornerShape(12.dp)
                     )
-                    .padding(vertical = 8.dp),
-                style = MaterialTheme.typography.labelLarge.emp(),
+                    .padding(vertical = 12.dp),
+                style = MaterialTheme.typography.titleSmall.emp(),
                 textAlign = TextAlign.Center,
                 color = Color.White
             )
@@ -82,7 +82,7 @@ fun FirstAidGuideContents(
 
             WarningCard()
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
         }
         Column(
@@ -95,12 +95,6 @@ fun FirstAidGuideContents(
                 type = ButtonType.PRIMARY,
                 onClicked = onHospitalMatchingResultClicked
             )
-
-//            BasicButton(
-//                text = "AI 챗봇에게 질문하기",
-//                type = ButtonType.SECONDARY,
-//                onClicked = { }
-//            )
         }
     }
 
@@ -199,12 +193,12 @@ private fun FirstAidGuideColumn(firstAidGuide: FirstAidGuide) {
                     ) {
                         Text(
                             text = elem.description,
-                            style = MaterialTheme.typography.labelMedium.emp(),
+                            style = MaterialTheme.typography.labelLarge.emp(),
                             color = colorScheme.textPrimary
                         )
                         Text(
                             text = elem.warning,
-                            style = MaterialTheme.typography.labelSmall.emp(),
+                            style = MaterialTheme.typography.labelMedium.emp(),
                             color = colorScheme.caption2
                         )
                     }

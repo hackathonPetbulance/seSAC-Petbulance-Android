@@ -1,5 +1,6 @@
 package com.example.presentation.screen.hospital
 
+import android.content.Intent
 import android.location.Location
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -51,10 +51,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.domain.model.feature.hospitals.HospitalDetail
@@ -64,6 +66,7 @@ import com.example.domain.model.feature.review.ReviewList
 import com.example.domain.utils.toKorean
 import com.example.presentation.component.theme.PetbulanceTheme
 import com.example.presentation.component.theme.PetbulanceTheme.colorScheme
+import com.example.presentation.component.theme.emp
 import com.example.presentation.component.ui.CommonPadding
 import com.example.presentation.component.ui.atom.BasicButton
 import com.example.presentation.component.ui.atom.BasicIcon
@@ -175,10 +178,9 @@ private fun HospitalScreenContents(
     onNavigateButtonClicked: () -> Unit
 ) {
     var selectedTab by remember { mutableStateOf(TabType.DETAILS) }
+    val context = LocalContext.current
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
@@ -211,7 +213,7 @@ private fun HospitalScreenContents(
                     Text(
                         text = "상세정보",
                         color = colorScheme.textPrimary,
-                        style = typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                        style = typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.padding(12.dp)
                     )
                 }
@@ -235,7 +237,7 @@ private fun HospitalScreenContents(
                     Text(
                         text = "방문 후기",
                         color = colorScheme.textPrimary,
-                        style = typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                        style = typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.padding(12.dp)
                     )
                 }
@@ -247,6 +249,8 @@ private fun HospitalScreenContents(
             } else {
                 ReviewTab(reviews)
             }
+
+            Spacer(modifier = Modifier.height(32.dp))
         }
 
         Column(
@@ -259,7 +263,12 @@ private fun HospitalScreenContents(
             BasicButton(
                 text = "전화 문의하기",
                 type = ButtonType.PRIMARY,
-                onClicked = { /* TODO : open Phone */ }
+                onClicked = {
+                    val intent = Intent(Intent.ACTION_DIAL).apply {
+                        data = "tel:${hospital.phone}".toUri()
+                    }
+                    context.startActivity(intent)
+                }
             )
         }
     }
@@ -282,17 +291,17 @@ private fun DetailTab(
         Text(
             text = "병원 위치",
             color = colorScheme.textPrimary,
-            style = typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+            style = typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
         )
         Text(
-            text = "${hospital.location.address}, ${hospital.name}",
+            text = "${hospital.location.address}\n${hospital.name}",
             color = colorScheme.textTertiary,
             style = typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
         )
         Box(
             modifier = Modifier
+                .height(200.dp)
                 .fillMaxWidth()
-                .heightIn(min = 240.dp)
         ) {
             NaverMapView(
                 currentLocation = currentLocation,
@@ -325,7 +334,10 @@ private fun DetailTab(
     HorizontalDivider(thickness = 12.dp, color = Color(0XFFEEEEEE))
 
     ProposeModificationsCard()
+
     HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+
+    Spacer(modifier = Modifier.height(64.dp))
 }
 
 @Composable
@@ -380,14 +392,14 @@ private fun HourInfoItem(day: String, hours: String, modifier: Modifier = Modifi
         Text(
             text = day,
             color = dayColor,
-            style = typography.bodyMedium,
+            style = typography.bodyMedium.emp(),
             modifier = Modifier.weight(0.3f),
             textAlign = TextAlign.Start
         )
         Text(
             text = hours,
             color = colorScheme.textSecondary,
-            style = typography.bodyMedium,
+            style = typography.bodyMedium.emp(),
             modifier = Modifier.weight(0.6f),
             textAlign = TextAlign.Start
         )

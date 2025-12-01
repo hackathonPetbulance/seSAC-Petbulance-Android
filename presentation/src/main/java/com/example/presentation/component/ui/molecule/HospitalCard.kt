@@ -1,5 +1,6 @@
 package com.example.presentation.component.ui.molecule
 
+import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -35,6 +37,8 @@ fun HospitalCard(
     onCardClicked: () -> Unit,
     onNavigationClicked: () -> Unit
 ) {
+    val context = LocalContext.current
+
     BasicCard(
         modifier = Modifier
             .dropShadow(
@@ -71,7 +75,12 @@ fun HospitalCard(
             BasicButton(
                 text = "전화하기",
                 type = ButtonType.PRIMARY,
-                onClicked = { /* TODO : on Phone Call Intent */ },
+                onClicked = {
+                    val intent = Intent(Intent.ACTION_DIAL).apply {
+                        data = "tel:${hospital.phone}".toUri()
+                    }
+                    context.startActivity(intent)
+                },
                 modifier = Modifier.weight(2f)
             )
         }

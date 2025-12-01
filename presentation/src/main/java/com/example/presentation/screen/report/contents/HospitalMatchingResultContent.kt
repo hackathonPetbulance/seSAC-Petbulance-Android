@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.feature.hospitals.MatchedHospital
@@ -34,6 +37,7 @@ import com.example.domain.model.type.HospitalFilterType
 import com.example.domain.model.type.toKorean
 import com.example.presentation.component.theme.PetbulanceTheme
 import com.example.presentation.component.theme.PetbulanceTheme.colorScheme
+import com.example.presentation.component.theme.emp
 import com.example.presentation.component.ui.CommonPadding
 import com.example.presentation.component.ui.atom.BasicButton
 import com.example.presentation.component.ui.atom.BasicCard
@@ -105,9 +109,11 @@ fun HospitalMatchingResult(
                         text = "조건에 맞는 병원이 없어요",
                         color = colorScheme.textPrimary,
                         style = typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                        modifier = Modifier.padding(12.dp)
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
+                Spacer(modifier = Modifier.height(48.dp))
             }
         }
         Column(
@@ -144,12 +150,12 @@ private fun ResultCard(
         Text(
             text = "$userLocation 기준 ${hospitalCounts}개 병원을 찾았어요.",
             color = colorScheme.textPrimary,
-            style = typography.bodyLarge,
+            style = typography.bodyLarge.emp(),
         )
 
         Text(
             text = "응급도 ${emergencyLevel.toKorean()} / $animalType / 현재 시간 기준 진료 가능",
-            style = typography.labelSmall,
+            style = typography.labelSmall.emp(),
             color = colorScheme.caption
         )
     }

@@ -43,7 +43,7 @@ fun NaverMapView(
 ) {
     if (LocalInspectionMode.current) {
         Box(
-            modifier = modifier.background(Color.LightGray).fillMaxSize(),
+            modifier = modifier.fillMaxSize().background(Color.LightGray),
             contentAlignment = Alignment.Center
         ) {
             Text(text = "Map Preview")

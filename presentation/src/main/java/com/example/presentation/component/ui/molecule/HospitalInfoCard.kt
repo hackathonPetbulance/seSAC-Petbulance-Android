@@ -76,13 +76,13 @@ fun HospitalInfoCard(
                     if (hospital.openNow) {
                         Text(
                             text = "진료 중",
-                            style = MaterialTheme.typography.labelLarge,
+                            style = MaterialTheme.typography.labelLarge.emp(),
                             color = Color(0xFF067DFD)
                         )
                     } else {
                         Text(
                             text = "진료 마감",
-                            style = MaterialTheme.typography.labelLarge,
+                            style = MaterialTheme.typography.labelLarge.emp(),
                             color = colorScheme.disabled
                         )
                     }

@@ -11,7 +11,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,12 +25,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.glance.text.Text
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.domain.model.feature.hospitals.HospitalDetail
 import com.example.domain.model.feature.hospitals.HospitalMarker
 import com.example.presentation.component.theme.PetbulanceTheme
 import com.example.presentation.component.theme.PetbulanceTheme.colorScheme
+import com.example.presentation.component.theme.emp
+import com.example.presentation.component.ui.atom.BasicDialog
 import com.example.presentation.component.ui.atom.IconResource
 import com.example.presentation.component.ui.organism.AppTopBar
 import com.example.presentation.component.ui.organism.BottomNavigationBar
@@ -38,6 +44,7 @@ import com.example.presentation.utils.error.ErrorDialog
 import com.example.presentation.utils.error.ErrorDialogState
 import com.example.presentation.utils.nav.ScreenDestinations
 import com.example.presentation.utils.nav.safeNavigate
+import com.example.presentation.utils.nav.safePopBackStack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 
@@ -65,16 +72,22 @@ fun SearchScreen(
         topBar = {
             AppTopBar(
                 topBarInfo = TopBarInfo(
-                    text = "Search screen",
+                    text = "병원 검색",
                     isLeadingIconAvailable = false,
                     onLeadingIconClicked = {},
-                    leadingIconResource = IconResource.Vector(Icons.AutoMirrored.Filled.KeyboardArrowLeft)
+                    leadingIconResource = IconResource.Vector(Icons.AutoMirrored.Filled.KeyboardArrowLeft),
+                    trailingIcons = listOf(
+                        Pair(
+                            IconResource.Vector(Icons.Default.Search),
+                            {}
+                        )
+                    )
                 ),
             )
         },
         bottomBar = {
             BottomNavigationBar(
-                selectedItem = CurrentBottomNav.HOME,
+                selectedItem = CurrentBottomNav.SEARCH,
                 navController = navController
             )
         },
@@ -90,11 +103,27 @@ fun SearchScreen(
             errorDialogState = errorDialogState,
             errorHandler = {
                 errorDialogState = errorDialogState.toggleVisibility()
-                navController.safeNavigate(ScreenDestinations.Home.route)
             }
         )
     }
 
+    BasicDialog(
+        onDismissRequest = { navController.safePopBackStack() }
+    ){
+        Text(
+            text = "준비 중인 기능입니다.",
+            style = MaterialTheme.typography.bodyLarge.emp(),
+            color = colorScheme.commonText,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        Text(
+            text = "아직 개발중인 기능입니다.",
+            style = MaterialTheme.typography.bodyMedium.emp(),
+            color = colorScheme.caption,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+    }
     // BackHandler { }
 }
 
@@ -134,7 +163,6 @@ private fun SearchScreenContents(
 }
 
 
-@Preview(apiLevel = 34)
 @Composable
 private fun SearchScreenPreview() {
     PetbulanceTheme() {

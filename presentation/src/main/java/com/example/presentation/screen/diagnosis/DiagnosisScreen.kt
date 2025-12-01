@@ -119,11 +119,17 @@ fun DiagnosisScreen(
     var isReportReady by remember { mutableStateOf(false) }
     var currentStep by remember { mutableIntStateOf(0) }
 
+    val randomList = generateSequence {
+        List(5) { (1..4).random() }
+    }.first { it.sum() in 10..15 }
+
+    val timer by remember { mutableStateOf(randomList) }
+
     LaunchedEffect(argument.screenState) {
         if (argument.screenState == DiagnosisScreenState.OnProgress) {
             currentStep = 0 // OnProgress 시작 시 0으로 초기화
             while (currentStep < 5) {
-                delay(500) // 2.5초 대기
+                delay(timer[currentStep] * 1000L) // 2.5초 대기
                 currentStep++
             }
         }
@@ -262,6 +268,7 @@ fun DiagnosisScreen(
                 text = "왜 3장이 필요한가요?",
                 color = Color.Black,
                 style = typography.titleSmall.emp(),
+                modifier = Modifier.padding(bottom = 4.dp)
             )
             Text(
                 text = "• 원격 진료 표준은 공통적으로 전신/부위/근접의 3단계 다각도 촬영을 권장합니다",
@@ -322,7 +329,6 @@ private fun DiagnosisOnProgressScreenContents(
     imageUris: List<Uri?>,
     currentStep: Int
 ) {
-
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -553,7 +559,7 @@ private fun UploadedState(imageUris: List<Uri?>) {
                     .clip(RoundedCornerShape(4.dp)),
                 color = colorScheme.primary,
                 trackColor = Color.LightGray,
-                strokeCap = StrokeCap.Butt
+                strokeCap = StrokeCap.Round
             )
             Text(
                 text = "$uploadedImageCount/3 장 업로드",
@@ -581,7 +587,7 @@ private fun UploadCard(
     }
 
     Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         BasicCard(
             modifier = Modifier
@@ -596,6 +602,9 @@ private fun UploadCard(
                         style = stroke,
                         cornerRadius = CornerRadius(16.dp.toPx())
                     )
+                }
+                .clickable {
+                    onAddImageIconClicked()
                 },
             borderColor = Color.Transparent,
             backgroundColor = Color(0xFFFAFAFA),
@@ -605,10 +614,7 @@ private fun UploadCard(
                 BasicIcon(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(48.dp)
-                        .clickable {
-                            onAddImageIconClicked()
-                        },
+                        .padding(48.dp),
                     iconResource = IconResource.Vector(Icons.Default.Add),
                     contentDescription = "Add image",
                     size = 1.dp,
@@ -629,7 +635,7 @@ private fun UploadCard(
             Text(
                 text = recommendationText,
                 color = recommendationTextColor,
-                style = typography.bodyMedium.emp()
+                style = typography.bodyLarge.emp()
             )
             Text(
                 text = recommendationDescriptionText,
@@ -683,7 +689,7 @@ private fun UserInputSection(
         Text(
             text = "텍스트로 직접 설명하기",
             color = colorScheme.textPrimary,
-            style = typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+            style = typography.titleSmall.emp(),
         )
 
         Box {
