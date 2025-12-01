@@ -10,6 +10,7 @@ import com.example.presentation.screen.diagnosis.diagnosisDestination
 import com.example.presentation.screen.home.homeDestination
 import com.example.presentation.screen.hospital.hospitalDestination
 import com.example.presentation.screen.report.reportDestination
+import com.example.presentation.screen.search.searchDestination
 import com.example.presentation.utils.nav.ScreenDestinations
 
 @RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
@@ -27,5 +28,6 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
         diagnosisDestination(navController = navController)
         reportDestination(navController = navController)
         hospitalDestination(navController = navController)
+        searchDestination(navController = navController)
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.presentation.component.theme.PetbulanceTheme
+import com.example.presentation.component.theme.emp
 import com.example.presentation.component.ui.Space16
 import com.example.presentation.component.ui.atom.BasicButton
 import com.example.presentation.component.ui.atom.BasicDialog
@@ -25,13 +26,13 @@ fun ErrorDialog(
     BasicDialog {
         Text(
             text = directErrorTitle,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.bodyLarge.emp(),
             color = PetbulanceTheme.colorScheme.commonText,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         Text(
             text = directErrorMessage ?: errorDialogState.userMessage,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium.emp(),
             color = PetbulanceTheme.colorScheme.descriptionText,
             softWrap = true,
             maxLines = 4,

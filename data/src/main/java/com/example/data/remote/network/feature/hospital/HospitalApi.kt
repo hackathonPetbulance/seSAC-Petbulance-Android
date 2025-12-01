@@ -43,7 +43,7 @@ class HospitalApi @Inject constructor(
         return client.get(url) {
             contentType(ContentType.Application.Json)
             parameter("filter", filter.name)
-            parameter("species", species) // species를 쿼리 파라미터로 추가
+            parameter("species", species)
             parameter("lat", lat)
             parameter("lng", lng)
         }

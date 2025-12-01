@@ -51,11 +51,11 @@ class HospitalRepositoryImpl @Inject constructor(
     }
 }
 
-private fun String.toAnimalSpecies(): String {
+private fun String.toAnimalSpecies(): String? {
     return when (this) {
         "조류" -> "PARROT"
         "파충류" -> "GECKO"
         "소형 포유류" -> "HAMSTER"
-        else -> ""
+        else -> null
     }
 }

@@ -58,7 +58,9 @@ fun ReportScreen(
     LaunchedEffect(argument.event) {
         argument.event.collect { event ->
             when (event) {
-                else -> {}
+                is ReportEvent.DataFetch.Error -> {
+                    errorDialogState = ErrorDialogState.fromErrorEvent(event)
+                }
             }
         }
     }
@@ -101,6 +103,9 @@ fun ReportScreen(
                 },
                 onHospitalCardClicked = { id ->
                     navController.safeNavigate(ScreenDestinations.Hospital.createRoute(id))
+                },
+                onNavigateButtonClicked = { id ->
+                    navController.safeNavigate(ScreenDestinations.Search.createRoute(id))
                 }
             )
         }
@@ -111,7 +116,6 @@ fun ReportScreen(
             errorDialogState = errorDialogState,
             errorHandler = {
                 errorDialogState = errorDialogState.toggleVisibility()
-                navController.safeNavigate(ScreenDestinations.Home.route)
             }
         )
     }
@@ -129,7 +133,8 @@ private fun ReportScreenContents(
     onHospitalMatchingResultClicked: () -> Unit,
     onFirstAidGuideClicked: () -> Unit,
     onHospitalMatchRequest: (HospitalFilterType) -> Unit,
-    onHospitalCardClicked: (Long)-> Unit
+    onHospitalCardClicked: (Long)-> Unit,
+    onNavigateButtonClicked: (Long) ->Unit
 ) {
     when (screenState) {
         ReportScreenState.SummaryReport -> ReportSummary(
@@ -150,7 +155,8 @@ private fun ReportScreenContents(
             animalType = aiDiagnosis.animalType,
             onFirstAidGuideClicked = onFirstAidGuideClicked,
             onHospitalMatchRequest = onHospitalMatchRequest,
-            onHospitalCardClicked = onHospitalCardClicked
+            onHospitalCardClicked = onHospitalCardClicked,
+            onNavigateButtonClicked = onNavigateButtonClicked
         )
 
         ReportScreenState.FirstAidGuide -> FirstAidGuideContents(

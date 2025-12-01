@@ -99,6 +99,11 @@ fun HospitalScreen(
     LaunchedEffect(argument.event) {
         argument.event.collect { event ->
             when (event) {
+
+                is HospitalEvent.DataFetch.Error -> {
+                    errorDialogState = ErrorDialogState.fromErrorEvent(event)
+                }
+
                 else -> {}
             }
         }
@@ -134,7 +139,14 @@ fun HospitalScreen(
             HospitalScreenContents(
                 hospital = hospital,
                 currentUserLocation = currentUserLocation,
-                reviews = reviews ?: ReviewList.empty()
+                reviews = reviews ?: ReviewList.empty(),
+                onNavigateButtonClicked = {
+                    navController.safeNavigate(
+                        ScreenDestinations.Search.createRoute(
+                            hospital.hospitalId
+                        )
+                    )
+                }
             )
         }
     }
@@ -144,7 +156,6 @@ fun HospitalScreen(
             errorDialogState = errorDialogState,
             errorHandler = {
                 errorDialogState = errorDialogState.toggleVisibility()
-                navController.safeNavigate(ScreenDestinations.Home.route)
             }
         )
     }
@@ -160,9 +171,10 @@ private enum class TabType {
 private fun HospitalScreenContents(
     hospital: HospitalDetail,
     currentUserLocation: Location,
-    reviews: ReviewList
+    reviews: ReviewList,
+    onNavigateButtonClicked: () -> Unit
 ) {
-    var selectedTab by remember { mutableStateOf(TabType.REVIEWS) }
+    var selectedTab by remember { mutableStateOf(TabType.DETAILS) }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -231,7 +243,7 @@ private fun HospitalScreenContents(
             HorizontalDivider(thickness = (0.5).dp, color = Color.LightGray)
 
             if (selectedTab == TabType.DETAILS) {
-                DetailTab(hospital, currentUserLocation)
+                DetailTab(hospital, currentUserLocation, onNavigateButtonClicked)
             } else {
                 ReviewTab(reviews)
             }
@@ -257,6 +269,7 @@ private fun HospitalScreenContents(
 private fun DetailTab(
     hospital: HospitalDetail,
     currentLocation: Location,
+    onNavigateButtonClicked: () -> Unit
 ) {
     var naverMap by remember { mutableStateOf<NaverMap?>(null) }
 
@@ -301,7 +314,7 @@ private fun DetailTab(
         BasicButton(
             text = "지도에서 보기",
             type = ButtonType.DEFAULT,
-            onClicked = {/* TODO : Navigate to  */ },
+            onClicked = onNavigateButtonClicked,
         )
     }
 

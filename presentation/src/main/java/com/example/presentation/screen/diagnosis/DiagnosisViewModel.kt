@@ -148,7 +148,7 @@ class DiagnosisViewModel @Inject constructor(
     @SuppressLint("MissingPermission")
     private suspend fun getNearByHospital(filter: HospitalFilterType) {
         _state.value = DiagnosisState.OnProgress
-
+        Log.d("siria22", "?????????? ${filter}")
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 launch {

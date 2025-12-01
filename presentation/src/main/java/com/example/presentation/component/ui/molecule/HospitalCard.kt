@@ -30,18 +30,23 @@ import com.example.presentation.component.ui.atom.ButtonType
 import com.example.presentation.component.ui.dropShadow
 
 @Composable
-fun HospitalCard(hospital: MatchedHospital,
-                 onClicked: () -> Unit) {
+fun HospitalCard(
+    hospital: MatchedHospital,
+    onCardClicked: () -> Unit,
+    onNavigationClicked: () -> Unit
+) {
     BasicCard(
-        modifier = Modifier.dropShadow(
-            shape = RoundedCornerShape(16.dp),
-            color = Color.LightGray.copy(0.15f),
-            blur = 2.dp,
-            offsetY = 1.dp,
-            spread = 1.dp
-        ).clickable {
-            onClicked()
-        }
+        modifier = Modifier
+            .dropShadow(
+                shape = RoundedCornerShape(16.dp),
+                color = Color.LightGray.copy(0.15f),
+                blur = 2.dp,
+                offsetY = 1.dp,
+                spread = 1.dp
+            )
+            .clickable {
+                onCardClicked()
+            }
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -60,7 +65,7 @@ fun HospitalCard(hospital: MatchedHospital,
             BasicButton(
                 text = "길안내",
                 type = ButtonType.SECONDARY,
-                onClicked = { /* TODO : on Navigation Opened */ },
+                onClicked = onNavigationClicked,
                 modifier = Modifier.weight(1f)
             )
             BasicButton(
@@ -101,7 +106,7 @@ private fun HospitalInfos(hospital: MatchedHospital) {
                 )
             }
             Text(
-                text = "%.2f".format(hospital.distanceKm)+ " km",
+                text = "%.2f".format(hospital.distanceKm) + " km",
                 style = MaterialTheme.typography.bodyMedium.emp(),
                 color = colorScheme.caption
             )
@@ -129,6 +134,6 @@ private fun HospitalInfos(hospital: MatchedHospital) {
 @Composable
 private fun HospitalCardPreview() {
     PetbulanceTheme {
-        HospitalCard(MatchedHospital.stub(), {})
+        HospitalCard(MatchedHospital.stub(), {}, {})
     }
 }

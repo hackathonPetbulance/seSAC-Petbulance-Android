@@ -11,4 +11,8 @@ sealed class ScreenDestinations(val route: String) {
     data object Hospital : ScreenDestinations("hospital/{hospitalId}") {
         fun createRoute(hospitalId: Long) = "hospital/$hospitalId"
     }
+
+    data object Search : ScreenDestinations("search/{hospitalId}") {
+        fun createRoute(hospitalId: Long) = "search/$hospitalId"
+    }
 }

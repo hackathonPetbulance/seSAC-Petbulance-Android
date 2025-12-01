@@ -1,5 +1,7 @@
 package com.example.presentation.screen.home
 
+import com.example.domain.model.type.AnimalCategory
+import com.example.domain.model.type.AnimalSpecies
 import com.example.presentation.utils.error.ErrorEvent
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -16,6 +18,7 @@ sealed class HomeState {
 
 sealed class HomeIntent {
     data object GetNearByHospital : HomeIntent()
+    data class ChangeReviewCategory(val animalCategory: AnimalCategory) : HomeIntent()
 }
 
 sealed class HomeEvent {

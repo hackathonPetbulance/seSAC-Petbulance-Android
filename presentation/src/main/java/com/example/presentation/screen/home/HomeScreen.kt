@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -87,11 +88,12 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     var errorDialogState by remember { mutableStateOf(ErrorDialogState.idle()) }
-    var hasLocationPermission by remember { mutableStateOf(true) } /* todo : false */
+    var hasLocationPermission by remember { mutableStateOf(false) }
 
     var currentSelectedAnimalCategory by remember { mutableStateOf(AnimalCategory.SMALL_MAMMAL) }
     val onReviewCategoryChipClicked = { animalCategory: AnimalCategory ->
         currentSelectedAnimalCategory = animalCategory
+        argument.intent(HomeIntent.ChangeReviewCategory(animalCategory))
     }
 
     val hospitalCards = data.matchedHospitals
@@ -114,7 +116,9 @@ fun HomeScreen(
     LaunchedEffect(argument.event) {
         argument.event.collect { event ->
             when (event) {
-                else -> {}
+                is HomeEvent.DataFetch.Error -> {
+                    errorDialogState = ErrorDialogState.fromErrorEvent(event)
+                }
             }
         }
     }
@@ -154,6 +158,9 @@ fun HomeScreen(
                 },
                 onHospitalCardClicked = { id ->
                     navController.safeNavigate(ScreenDestinations.Hospital.createRoute(id))
+                },
+                onNavigateButtonClicked = { id ->
+                    navController.safeNavigate(ScreenDestinations.Search.createRoute(id))
                 }
             )
         }
@@ -163,7 +170,7 @@ fun HomeScreen(
         ErrorDialog(
             errorDialogState = errorDialogState,
             errorHandler = {
-                errorDialogState.toggleVisibility()
+                errorDialogState = errorDialogState.toggleVisibility()
                 navController.safeNavigate(ScreenDestinations.Home.route)
             }
         )
@@ -180,7 +187,8 @@ private fun HomeScreenContents(
     currentSelectedAnimalCategory: AnimalCategory,
     onNavigateToDiagnosisScreen: () -> Unit,
     onReviewCategoryChipClicked: (AnimalCategory) -> Unit,
-    onHospitalCardClicked: (Long) -> Unit
+    onHospitalCardClicked: (Long) -> Unit,
+    onNavigateButtonClicked: (Long) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -191,7 +199,12 @@ private fun HomeScreenContents(
     ) {
         StartAiReportCard(onNavigateToDiagnosisScreen)
 
-        NearByHospitalCards(hasLocationPermission, matchedHospitals, onHospitalCardClicked)
+        NearByHospitalCards(
+            hasLocationPermission,
+            matchedHospitals,
+            onHospitalCardClicked,
+            onNavigateButtonClicked
+        )
 
         HospitalReviews(
             hospitalReviews = hospitalReviews,
@@ -288,7 +301,8 @@ private fun StartAiReportCard(
 private fun NearByHospitalCards(
     hasLocationPermission: Boolean,
     matchedHospitals: List<MatchedHospital>,
-    onHospitalCardClicked: (Long) -> Unit
+    onHospitalCardClicked: (Long) -> Unit,
+    onNavigateButtonClicked: (Long) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -302,7 +316,10 @@ private fun NearByHospitalCards(
         )
         if (hasLocationPermission) {
             matchedHospitals.forEach { hospital ->
-                HospitalCard(hospital, { onHospitalCardClicked(hospital.hospitalId) })
+                HospitalCard(
+                    hospital,
+                    { onHospitalCardClicked(hospital.hospitalId) },
+                    { onNavigateButtonClicked(hospital.hospitalId) })
             }
         } else {
             PermissionRequiredCard("위치 정보 수집 권한")
@@ -350,11 +367,12 @@ private fun HospitalReviews(
         LazyRow(
             state = listState,
             flingBehavior = snapBehavior,
-            contentPadding = PaddingValues(horizontal = 0.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(hospitalReviews.list) { elem ->
                 HospitalReviewCarouselCard(
-                    modifier = Modifier.fillParentMaxWidth(),
+                    modifier = Modifier.width(320.dp), // 고정 너비 설정
                     review = elem
                 )
             }

@@ -13,19 +13,16 @@ import io.ktor.client.statement.HttpResponse
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BaseResponse<T>(
+data class GlobalResponse<T>(
     val status: Int,
     val success: Boolean,
-    val data: T? = null,
-    val message: String? = null
+    val data: T? = null
 )
 
 @Serializable
 data class ErrorResponse(
-    val timestamp: String,
-    val status: Int,
-    val error: String,
-    val path: String
+    val errorClassName: String,
+    val message: String
 )
 
 suspend inline fun <reified T> safeApiCall(apiCall: suspend () -> HttpResponse): Result<T> {
@@ -35,7 +32,7 @@ suspend inline fun <reified T> safeApiCall(apiCall: suspend () -> HttpResponse):
         val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 
         if (response.status.value in 200..299) {
-            val responseBody = json.decodeFromString<BaseResponse<T>>(responseString)
+            val responseBody = json.decodeFromString<GlobalResponse<T>>(responseString)
             Log.d("siria22 - SafeApiCalls (Success)", responseString)
 
             if (responseBody.success) {
@@ -45,16 +42,19 @@ suspend inline fun <reified T> safeApiCall(apiCall: suspend () -> HttpResponse):
                 return Result.failure(
                     mapToDomainException(
                         responseBody.status,
-                        responseBody.message ?: "No information from server"
+                        "Request failed with status ${responseBody.status}"
                     )
                 )
             }
         } else {
-            // 실패 시 ErrorResponse로 파싱
+            // 실패 시 GlobalResponse<ErrorResponse>로 파싱
             Log.e("siria22 - SafeApiCalls (Error)", responseString)
-            val errorBody = json.decodeFromString<ErrorResponse>(responseString)
+            val errorBody = json.decodeFromString<GlobalResponse<ErrorResponse>>(responseString)
             return Result.failure(
-                mapToDomainException(errorBody.status, errorBody.error)
+                mapToDomainException(
+                    errorBody.status,
+                    errorBody.data?.message ?: "Unknown error"
+                )
             )
         }
     } catch (e: Exception) {

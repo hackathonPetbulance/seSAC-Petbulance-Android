@@ -57,7 +57,8 @@ fun HospitalMatchingResult(
     animalType: String,
     onFirstAidGuideClicked: () -> Unit,
     onHospitalMatchRequest: (HospitalFilterType) -> Unit,
-    onHospitalCardClicked: (Long) -> Unit
+    onHospitalCardClicked: (Long) -> Unit,
+    onNavigateButtonClicked: (Long) -> Unit
 ) {
     var currentFilter by remember { mutableStateOf(HospitalFilterType.DISTANCE) }
 
@@ -89,9 +90,13 @@ fun HospitalMatchingResult(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if(hospitals.isNotEmpty()) {
+                if (hospitals.isNotEmpty()) {
                     hospitals.forEach { hospital ->
-                        HospitalCard(hospital, { onHospitalCardClicked(hospital.hospitalId) })
+                        HospitalCard(
+                            hospital,
+                            { onHospitalCardClicked(hospital.hospitalId) },
+                            { onNavigateButtonClicked(hospital.hospitalId) }
+                        )
                     }
 
                     CheckedByTeam(modifier = Modifier.fillMaxWidth())
@@ -173,7 +178,7 @@ private fun FilterChip(
 }
 
 @Composable
-private fun CheckedByTeam(modifier: Modifier = Modifier){
+private fun CheckedByTeam(modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -215,7 +220,7 @@ private fun HospitalMatchingResultPreview() {
             animalType = "앵무새",
             onFirstAidGuideClicked = {},
             onHospitalMatchRequest = {},
-            {}
+            {}, {}
         )
     }
 }

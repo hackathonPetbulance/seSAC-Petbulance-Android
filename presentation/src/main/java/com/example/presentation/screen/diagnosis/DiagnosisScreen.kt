@@ -145,16 +145,15 @@ fun DiagnosisScreen(
 
                 is DiagnosisEvent.Request.Success -> {
                     isReportReady = true
-                    Log.d("siria22", "Match Hospital by filter intent")
                     argument.intent(DiagnosisIntent.MatchHospitalByFilter(HospitalFilterType.DISTANCE))
                 }
 
                 is DiagnosisEvent.Request.Error -> {
-                    errorDialogState.toggleVisibility()
+                    errorDialogState = ErrorDialogState.fromErrorEvent(event)
                 }
 
                 is DiagnosisEvent.DataFetch.Error -> {
-                    errorDialogState.toggleVisibility()
+                    errorDialogState = ErrorDialogState.fromErrorEvent(event)
                 }
             }
         }
@@ -237,7 +236,7 @@ fun DiagnosisScreen(
         ErrorDialog(
             errorDialogState = errorDialogState,
             errorHandler = {
-                errorDialogState.toggleVisibility()
+                errorDialogState = errorDialogState.toggleVisibility()
             }
         )
     }
@@ -332,7 +331,7 @@ private fun DiagnosisOnProgressScreenContents(
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val topImage = imageUris.first { it != null }
+        val topImage = imageUris.firstOrNull { it != null }
         if (topImage != null) {
             BasicImageBox(
                 size = 280.dp,
@@ -483,6 +482,8 @@ private fun DiagnosisUploadScreenContents(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         UploadedState(imageUris)
+
+        RequestMoreInfoCard()
 
         for (idx in 0..2) {
             UploadCard(
@@ -636,6 +637,32 @@ private fun UploadCard(
                 style = typography.bodyMedium
             )
         }
+    }
+}
+
+@Composable
+private fun RequestMoreInfoCard() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = Color(0xFFF5F5F5), shape = RoundedCornerShape(4.dp)
+            )
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        BasicIcon(
+            iconResource = IconResource.Vector(Icons.Outlined.Info),
+            contentDescription = "Info Icon",
+            size = 12.dp,
+            tint = colorScheme.iconTint
+        )
+        Text(
+            text = "증상을 직접 적으면 더 정확하게 분석합니다",
+            style = typography.labelMedium,
+            color = colorScheme.textPrimary,
+        )
     }
 }
 

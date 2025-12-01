@@ -24,7 +24,7 @@ data class Hospital(
             lng = 0.0,
             distanceMeters = 0.0,
             phone = "010-1234-5678",
-            types = listOf(AnimalSpecies.HAMSTER, AnimalSpecies.ETC_AMPHIBIAN),
+            types = listOf(AnimalSpecies.HAMSTER, AnimalSpecies.HAMSTER),
             isOpenNow = true,
             openHours = "09:00 - 18:00",
             thumbnailUrl = "https://example.com/thumbnail.jpg",
