@@ -7,6 +7,8 @@ plugins {
 
     id("com.google.dagger.hilt.android")
     alias(libs.plugins.devtoolsKsp)
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -65,6 +67,7 @@ dependencies {
 
     // DI
     implementation(libs.hilt.android)
+    implementation(libs.firebase.crashlytics)
     ksp(libs.hilt.android.compiler)
 
     // Navigation

@@ -127,7 +127,7 @@ fun BasicImageBox(
                 onClick = onDeletionIconClicked,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(1.dp)
+                    .padding(2.dp)
                     .background(Color.Black.copy(alpha = 0.5f), CircleShape)
             ) {
                 Icon(

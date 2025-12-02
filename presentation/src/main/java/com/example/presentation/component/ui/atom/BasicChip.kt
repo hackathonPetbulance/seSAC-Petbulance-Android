@@ -26,7 +26,7 @@ fun BasicChip(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall.emp(),
+            style = MaterialTheme.typography.labelMedium.emp(),
             color = textColor
         )
     }

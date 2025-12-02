@@ -121,7 +121,7 @@ private fun HospitalInfos(hospital: MatchedHospital) {
             )
             Dot(colorScheme.caption.copy(alpha = 0.8f))
             Text(
-                text = "${hospital.todayCloseTime.take(5)}까지", /// TODO: Report - 에 영업종료 = 칸 짤림
+                text = "${hospital.todayCloseTime.take(5)}까지",
                 style = MaterialTheme.typography.bodyMedium.emp(),
                 color = colorScheme.textTertiary
             )

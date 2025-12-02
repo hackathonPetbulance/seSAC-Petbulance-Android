@@ -192,7 +192,7 @@ private fun AiSummaryCard(
 
         Text(
             text = "감지된 주요 증상",
-            style = MaterialTheme.typography.labelMedium.emp(),
+            style = MaterialTheme.typography.labelLarge.emp(),
             color = colorScheme.textPrimary
         )
         Row(
@@ -212,13 +212,13 @@ private fun AiSummaryCard(
 
         Text(
             text = "의심 증상",
-            style = MaterialTheme.typography.labelMedium.emp(),
+            style = MaterialTheme.typography.labelLarge.emp(),
             color = colorScheme.textPrimary
         )
 
         Text(
             text = suspectedDisease,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             color = colorScheme.textSecondary
         )
 
@@ -226,7 +226,7 @@ private fun AiSummaryCard(
 
         Text(
             text = "권장 조치",
-            style = MaterialTheme.typography.labelMedium.emp(),
+            style = MaterialTheme.typography.labelLarge.emp(),
             color = colorScheme.textPrimary
         )
 
@@ -248,7 +248,7 @@ private fun AiSummaryCard(
             }
             Text(
                 text,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = colorScheme.caption2
             )
         }

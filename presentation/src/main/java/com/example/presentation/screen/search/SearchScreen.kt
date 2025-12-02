@@ -33,7 +33,9 @@ import com.example.domain.model.feature.hospitals.HospitalMarker
 import com.example.presentation.component.theme.PetbulanceTheme
 import com.example.presentation.component.theme.PetbulanceTheme.colorScheme
 import com.example.presentation.component.theme.emp
+import com.example.presentation.component.ui.atom.BasicButton
 import com.example.presentation.component.ui.atom.BasicDialog
+import com.example.presentation.component.ui.atom.ButtonType
 import com.example.presentation.component.ui.atom.IconResource
 import com.example.presentation.component.ui.organism.AppTopBar
 import com.example.presentation.component.ui.organism.BottomNavigationBar
@@ -122,6 +124,12 @@ fun SearchScreen(
             style = MaterialTheme.typography.bodyMedium.emp(),
             color = colorScheme.caption,
             modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        BasicButton(
+            text = "닫기",
+            onClicked = { navController.safePopBackStack() },
+            type = ButtonType.PRIMARY,
         )
     }
     // BackHandler { }

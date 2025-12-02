@@ -84,6 +84,7 @@ import com.example.presentation.utils.error.ErrorDialog
 import com.example.presentation.utils.error.ErrorDialogState
 import com.example.presentation.utils.nav.ScreenDestinations
 import com.example.presentation.utils.nav.safeNavigate
+import com.example.presentation.utils.nav.safePopBackStack
 import com.naver.maps.map.NaverMap
 import kotlinx.coroutines.flow.MutableSharedFlow
 
@@ -119,12 +120,12 @@ fun HospitalScreen(
                     text = "병원 상세 정보",
                     textAlignment = TopBarAlignment.CENTER,
                     isLeadingIconAvailable = true,
-                    onLeadingIconClicked = {},
+                    onLeadingIconClicked = { navController.safePopBackStack() },
                     leadingIconResource = IconResource.Vector(Icons.AutoMirrored.Filled.KeyboardArrowLeft),
                     trailingIcons = listOf(
                         Pair(
                             IconResource.Vector(Icons.Filled.Share),
-                            { /* TODO : Share icon */ }
+                            { }
                         )
                     )
                 ),
@@ -317,7 +318,7 @@ private fun DetailTab(
                 cameraPosition = Location("").apply {
                     latitude = hospital.location.lat
                     longitude = hospital.location.lng
-                } /* TODO : 더 나은 방법이 있다고? */
+                }
             )
         }
         BasicButton(
@@ -622,7 +623,7 @@ private fun ReviewCard(review: Review) {
                     text = "2025.11.10",
                     color = colorScheme.textSecondary,
                     style = typography.bodySmall
-                ) /* TODO : 리뷰 creation date 없음 */
+                )
             }
             BasicIcon(
                 iconResource = IconResource.Vector(Icons.Default.MoreVert),
@@ -687,8 +688,7 @@ private fun ReviewCard(review: Review) {
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.clickable { /* TODO */ }
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
                     text = "도움이 됐어요",

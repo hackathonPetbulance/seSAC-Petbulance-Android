@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -54,6 +55,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -105,6 +107,7 @@ fun DiagnosisScreen(
 
     var isHelpDialogVisible by remember { mutableStateOf(false) }
     var isAddImageDialogVisible by remember { mutableStateOf(false) }
+    var isRequestFailedDialogVisible by remember { mutableStateOf(false) }
 
     val cameraLauncher = rememberCameraLauncher { uri ->
         argument.intent(DiagnosisIntent.UpdateImageUris(uri, currentSelectedStep))
@@ -155,7 +158,7 @@ fun DiagnosisScreen(
                 }
 
                 is DiagnosisEvent.Request.Error -> {
-                    errorDialogState = ErrorDialogState.fromErrorEvent(event)
+                    isRequestFailedDialogVisible = true
                 }
 
                 is DiagnosisEvent.DataFetch.Error -> {
@@ -320,6 +323,39 @@ fun DiagnosisScreen(
                 type = ButtonType.DEFAULT,
                 iconResource = IconResource.Vector(Icons.Outlined.Upload)
             )
+        }
+    }
+
+    if (isRequestFailedDialogVisible) {
+        BasicDialog(
+            minimumWidth = 0.85f,
+            backHandler = { isRequestFailedDialogVisible = false },
+            onDismissRequest = { navController.safeNavigate(ScreenDestinations.Home.route) }
+        ) {
+            Text(
+                text = "잠시 연결이 지연되고 있어요. 분석을 다시 시도하시겠어요?",
+                style = typography.titleSmall.emp(),
+                textAlign = TextAlign.Center,
+                color = colorScheme.textPrimary,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                BasicButton(
+                    text = "홈으로",
+                    type = ButtonType.SECONDARY,
+                    onClicked = { navController.safeNavigate(ScreenDestinations.Home.route) },
+                    modifier = Modifier.weight(3f)
+                )
+                BasicButton(
+                    text = "다시 시도",
+                    type = ButtonType.PRIMARY,
+                    onClicked = { isRequestFailedDialogVisible = false },
+                    modifier = Modifier.weight(6f)
+                )
+            }
         }
     }
 }
@@ -507,8 +543,7 @@ private fun DiagnosisUploadScreenContents(
             onDescriptionChanged = onDescriptionChanged
         )
 
-        /* TODO : 업로드 조건 확인 */
-        if (false) {
+        if (imageUris.none { it != null }) {
             BasicButton(
                 text = "AI 증상 분석하기 (${imageUris.filter { it != null }.size}/3)",
                 type = ButtonType.DEFAULT,
@@ -717,13 +752,13 @@ private fun UserInputSection(
                     color = colorScheme.textPrimary,
                     style = typography.bodyLarge.emp(),
                 )
-
                 BasicInputTextField(
                     value = description,
                     onValueChange = { onDescriptionChanged(it) },
                     placeholder = "예: 식욕 없음, 활동량 감소, 배변 이상 등",
                     singleLine = false,
-                    sizeFactor = 4
+                    sizeFactor = 4,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 )
             }
             if (isMenuOpened) {

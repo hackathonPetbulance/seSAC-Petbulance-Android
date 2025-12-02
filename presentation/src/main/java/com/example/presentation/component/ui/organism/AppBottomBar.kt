@@ -60,10 +60,7 @@ fun BottomNavigationBar(
             label = "병원검색",
             iconResourceId = IconResource.Drawable(R.drawable.icon_search),
             bottomNavType = CurrentBottomNav.SEARCH,
-            onClicked = {
-                // TODO : [Bottom Nav] Navigate to Map Screen
-                // navController.safeNavigate(ScreenDestinations.Profile.route)
-            }
+            onClicked = {            }
         )
     )
 

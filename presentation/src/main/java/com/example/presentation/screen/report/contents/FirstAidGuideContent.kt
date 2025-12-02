@@ -112,7 +112,7 @@ private fun SummaryCard(
     BasicCard {
         Text(
             text = "병원으로 이동하는 동안 다음 안내에 따라 처치를 시행해 주세요",
-            style = MaterialTheme.typography.labelSmall.emp(),
+            style = MaterialTheme.typography.labelMedium.emp(),
             color = colorScheme.textPrimary
         )
         Row(
@@ -127,7 +127,7 @@ private fun SummaryCard(
             )
             Text(
                 text = emergencyLevel.toKorean(),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = colorScheme.textPrimary
             )
         }
@@ -139,29 +139,29 @@ private fun SummaryCard(
         ) {
             Text(
                 text = "동물종",
-                style = MaterialTheme.typography.labelSmall.emp(),
+                style = MaterialTheme.typography.labelMedium.emp(),
                 color = colorScheme.caption
             )
             Text(
                 text = animalType,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = colorScheme.textPrimary
             )
         }
 
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Top,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 text = "의심 증상",
-                style = MaterialTheme.typography.labelSmall.emp(),
+                style = MaterialTheme.typography.labelMedium.emp(),
                 color = colorScheme.caption
             )
             Text(
                 text = suspectedDisease,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = colorScheme.textPrimary
             )
         }
@@ -241,7 +241,7 @@ private fun FirstAidGuidePreview() {
             ),
             animalType = "앵무새",
             emergencyLevel = EmergencyLevel.LOW,
-            suspectedDisease = "위장관 울혈 증후군 의심",
+            suspectedDisease = "위장관 울혈 증후군 의심 dasfdfasdfdasfadfdasfdasfdasfsdadfasdfsdafdasfdasfdasfsdadfsdadfsdafsdaaf",
             firstAidGuide = FirstAidGuide(
                 steps = listOf(
                     FirstAidGuideContent(

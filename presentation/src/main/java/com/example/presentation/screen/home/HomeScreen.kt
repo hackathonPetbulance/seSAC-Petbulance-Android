@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
@@ -132,8 +133,7 @@ fun HomeScreen(
                     shouldEmphasized = true,
                     isLeadingIconAvailable = false,
                     isTrailingIconAvailable = true,
-                    trailingIcons = listOf(Pair(IconResource.Vector(Icons.Filled.NotificationsNone)) {
-                        /* TODO : do sth */
+                    trailingIcons = listOf(Pair(IconResource.Vector(Icons.Filled.NotificationsNone)) {/* TODO : do sth */
                     })
                 ),
             )
@@ -367,15 +367,14 @@ private fun HospitalReviews(
                 )
             }
         }
-
-        LazyRow(
-            state = listState,
-            flingBehavior = snapBehavior,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            if (hospitalReviews.list.isEmpty()) {
-                item { ContentPlaceholder() }
-            } else {
+        if (hospitalReviews.list.isEmpty()) {
+            ContentPlaceholder()
+        } else {
+            LazyRow(
+                state = listState,
+                flingBehavior = snapBehavior,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 items(hospitalReviews.list) { elem ->
                     HospitalReviewCarouselCard(
                         modifier = Modifier.width(340.dp), // 고정 너비 설정

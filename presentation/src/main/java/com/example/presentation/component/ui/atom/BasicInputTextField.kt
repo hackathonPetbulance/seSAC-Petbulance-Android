@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,6 +53,7 @@ fun BasicInputTextField(
     sizeFactor: Int = 1,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
+    val focusManager = LocalFocusManager.current
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
@@ -61,6 +64,9 @@ fun BasicInputTextField(
         textStyle = textStyle.copy(color = PetbulanceTheme.colorScheme.commonText),
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
+        keyboardActions = KeyboardActions(onDone = {
+            focusManager.clearFocus()
+        }),
         cursorBrush = SolidColor(PetbulanceTheme.colorScheme.commonText),
         decorationBox = { innerTextField ->
             Row(

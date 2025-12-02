@@ -136,7 +136,7 @@ class DiagnosisViewModel @Inject constructor(
         }.onFailure { exception ->
             _eventFlow.emit(
                 DiagnosisEvent.Request.Error(
-                    userMessage = "진단 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+                    userMessage = "잠시 연결이 지연되고 있어요.\n가까운 병원 연락망을 이용하시겠어요?",
                     exceptionMessage = exception.message
                 )
             )
